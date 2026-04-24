@@ -3,6 +3,7 @@ import User from "../models/User.js";
 import Role from "../models/Role.js";
 
 export const authenticate = async (req, res, next) => {
+  console.log("object")
   try {
     const token =
       req.headers.authorization?.startsWith("Bearer ") &&

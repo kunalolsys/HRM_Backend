@@ -33,6 +33,10 @@ const userSchema = new mongoose.Schema(
         ref: "Role",
       },
     ],
+    refreshToken: {
+      type: String,
+      select: false,
+    },
     company: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Company",
@@ -99,3 +103,4 @@ userSchema.methods.comparePassword = async function (candidatePassword) {
 const User = mongoose.model("User", userSchema);
 
 export default User;
+

@@ -28,6 +28,32 @@ export const login = asyncHandler(async (req, res) => {
   });
 });
 
+export const refresh = asyncHandler(async (req, res) => {
+  const { refreshToken } = req.body;
+
+  if (!refreshToken) {
+    return res.status(400).json({
+      success: false,
+      message: "Refresh token is required",
+    });
+  }
+
+  const result = await authService.refreshAccessToken(refreshToken);
+  res.status(200).json({
+    success: true,
+    message: "Access token refreshed",
+    data: result,
+  });
+});
+
+export const logout = asyncHandler(async (req, res) => {
+  await authService.logoutUser(req.user._id);
+  res.status(200).json({
+    success: true,
+    message: "Logged out successfully",
+  });
+});
+
 export const getProfile = asyncHandler(async (req, res) => {
   const user = await authService.getMe(req.user._id);
   res.status(200).json({
@@ -35,3 +61,4 @@ export const getProfile = asyncHandler(async (req, res) => {
     data: user,
   });
 });
+
