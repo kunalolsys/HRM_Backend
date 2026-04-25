@@ -1,11 +1,16 @@
 import Role from "../models/Role.js";
 
 export const getAllRoles = async () => {
-  return await Role.find().populate("permissions", "name description module").sort({ createdAt: -1 });
+  return await Role.find()
+    .populate("permissions", "name description module")
+    .sort({ createdAt: -1 });
 };
 
 export const getRoleById = async (id) => {
-  const role = await Role.findById(id).populate("permissions", "name description module");
+  const role = await Role.findById(id).populate(
+    "permissions",
+    "name description module",
+  );
   if (!role) throw new Error("Role not found");
   return role;
 };
@@ -38,7 +43,7 @@ export const assignPermissionsToRole = async (roleId, permissionIds) => {
   const role = await Role.findByIdAndUpdate(
     roleId,
     { $set: { permissions: permissionIds } },
-    { new: true }
+    { new: true },
   ).populate("permissions", "name description module");
 
   if (!role) throw new Error("Role not found");

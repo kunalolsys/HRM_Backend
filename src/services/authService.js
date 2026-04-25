@@ -140,7 +140,8 @@ export const getMe = async (userId) => {
     .populate("cadre", "name")
     .populate("grade", "code")
     .populate("designation", "name")
-    .populate("reportingManager", "fullName employeeCode");
+    .populate("reportingManager", "fullName employeeCode")
+    .lean();
 
   if (!user) throw new Error("User not found");
   return user;
