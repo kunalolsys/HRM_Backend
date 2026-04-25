@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 import app from "./app.js";
 import mongoose from "mongoose";
+import { initSocket } from "./socket/socket.js";
 
 dotenv.config();
 
@@ -46,7 +47,8 @@ mongoose
     console.error("Error connecting to MongoDB:", error);
     process.exit(1);
   });
-
+//**Initialize Socket IO */
+initSocket(server);
 // Graceful shutdown
 const gracefulShutdown = (signal) => {
   console.log(`\nReceived ${signal}. Shutting down gracefully...`);
@@ -85,4 +87,3 @@ process.on("unhandledRejection", (err) => {
     process.exit(1);
   }
 });
-

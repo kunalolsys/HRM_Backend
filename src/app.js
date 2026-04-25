@@ -36,16 +36,6 @@ app.use("/api/auth", authRoutes);
 app.use("/api/roles", roleRoutes);
 app.use("/api/permissions", permissionRoutes);
 
-// --- HEALTH CHECK ROUTES ---
-
-app.get("/", (req, res) => {
-  res.json({
-    message: "Pragati PMS Backend API is running 🚀",
-    version: "1.0.0",
-    status: "healthy",
-  });
-});
-
 // --- GLOBAL ERROR HANDLER ---
 app.use((err, req, res, next) => {
   console.error("ERROR:", err.message);
