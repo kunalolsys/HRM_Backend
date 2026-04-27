@@ -1,18 +1,14 @@
 import mongoose from "mongoose";
 
-const permissionSchema = new mongoose.Schema(
+const companySchema = new mongoose.Schema(
   {
-    name: {
+    entityName: {
       type: String,
       required: true,
       unique: true,
       trim: true,
     },
-    description: {
-      type: String,
-      trim: true,
-    },
-    module: {
+    acronym: {
       type: String,
       required: true,
       trim: true,
@@ -34,6 +30,6 @@ const permissionSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-const Permission = mongoose.model("Permission", permissionSchema);
+const Company = mongoose.model("Company", companySchema);
 
-export default Permission;
+export default Company;

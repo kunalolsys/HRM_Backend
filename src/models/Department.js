@@ -1,21 +1,21 @@
 import mongoose from "mongoose";
 
-const permissionSchema = new mongoose.Schema(
+const departmentSchema = new mongoose.Schema(
   {
-    name: {
-      type: String,
-      required: true,
-      unique: true,
-      trim: true,
-    },
-    description: {
-      type: String,
-      trim: true,
-    },
-    module: {
+    depCode: {
       type: String,
       required: true,
       trim: true,
+    },
+    departmentName: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    status: {
+      type: String,
+      enum: ["Active", "Inactive"],
+      default: "Active",
     },
     isDeleted: {
       type: Boolean,
@@ -34,6 +34,12 @@ const permissionSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-const Permission = mongoose.model("Permission", permissionSchema);
+// ✅ Unique with soft delete support
+departmentSchema.index(
+  { depCode: 1 },
+  { unique: true, partialFilterExpression: { isDeleted: false } },
+);
 
-export default Permission;
+const Department = mongoose.model("Department", departmentSchema);
+
+export default Department;

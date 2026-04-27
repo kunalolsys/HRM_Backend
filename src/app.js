@@ -3,6 +3,9 @@ import cors from "cors";
 import authRoutes from "./routes/authRoutes.js";
 import roleRoutes from "./routes/roleRoutes.js";
 import permissionRoutes from "./routes/permissionRoutes.js";
+import companiesRoutes from "./routes/companyRoutes.js";
+import unitRoutes from "./routes/unitRoutes.js";
+import depRoutes from "./routes/departmentRoutes.js";
 
 const app = express();
 
@@ -35,6 +38,13 @@ if (process.env.NODE_ENV === "development") {
 app.use("/api/auth", authRoutes);
 app.use("/api/roles", roleRoutes);
 app.use("/api/permissions", permissionRoutes);
+//**Company & Unit Master */
+app.use("/api/companies", companiesRoutes);
+app.use("/api/units", unitRoutes);
+
+//**Department Master */
+app.use("/api/department", depRoutes);
+
 
 // --- GLOBAL ERROR HANDLER ---
 app.use((err, req, res, next) => {

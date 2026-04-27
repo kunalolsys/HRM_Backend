@@ -1,21 +1,20 @@
 import mongoose from "mongoose";
 
-const permissionSchema = new mongoose.Schema(
+const unitSchema = new mongoose.Schema(
   {
-    name: {
-      type: String,
-      required: true,
-      unique: true,
-      trim: true,
-    },
-    description: {
-      type: String,
-      trim: true,
-    },
-    module: {
+    unitName: {
       type: String,
       required: true,
       trim: true,
+    },
+    locationCode: {
+      type: String,
+      required: false,
+      trim: true,
+    },
+    company: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Company",
     },
     isDeleted: {
       type: Boolean,
@@ -34,6 +33,6 @@ const permissionSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-const Permission = mongoose.model("Permission", permissionSchema);
+const Unit = mongoose.model("Unit", unitSchema);
 
-export default Permission;
+export default Unit;
