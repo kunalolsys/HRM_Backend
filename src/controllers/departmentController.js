@@ -3,7 +3,7 @@ import * as departmentService from "../services/departmentService.js";
 
 export const getAllDep = asyncHandler(async (req, res) => {
   try {
-    const data = await departmentService.getAllDepartment();
+    const data = await departmentService.getAllDepartment(req.body);
     res.status(200).json({
       success: true,
       data,

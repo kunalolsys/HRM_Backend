@@ -5,24 +5,21 @@ import Role from "../models/Role.js";
 const JWT_SECRET = () => process.env.JWT_SECRET || "pragati-pms-secret-key";
 const JWT_REFRESH_SECRET = () =>
   process.env.JWT_REFRESH_SECRET || "pragati-pms-refresh-secret-key";
-
-const ACCESS_TOKEN_EXPIRES = "15m";
-const REFRESH_TOKEN_EXPIRES = "7d";
-
+const getAccessExpiry = () => process.env.JWT_EXPIRE || "15m";
+const getRefreshExpiry = () => process.env.REFRESH_TOKEN_EXPIRE_DAYS || "7d";
 // ─── Token Generators ──────────────────────────────────────────
 
 export const generateAccessToken = (userId) => {
   return jwt.sign({ id: userId, type: "access" }, JWT_SECRET(), {
-    expiresIn: ACCESS_TOKEN_EXPIRES,
+    expiresIn: getAccessExpiry(),
   });
 };
 
 export const generateRefreshToken = (userId) => {
   return jwt.sign({ id: userId, type: "refresh" }, JWT_REFRESH_SECRET(), {
-    expiresIn: REFRESH_TOKEN_EXPIRES,
+    expiresIn: getRefreshExpiry(),
   });
 };
-
 // ─── Auth Flows ────────────────────────────────────────────────
 
 export const registerUser = async (userData) => {
@@ -62,7 +59,7 @@ export const registerUser = async (userData) => {
 };
 
 export const loginUser = async (email, password) => {
-  const user = await User.findOne({ email })
+  const user = await User.findOne({ email: email, isDeleted: false })
     .select("+password")
     .populate("roles");
 
@@ -130,20 +127,3 @@ export const logoutUser = async (userId) => {
   await User.findByIdAndUpdate(userId, { refreshToken: null });
   return { message: "Logged out successfully" };
 };
-
-export const getMe = async (userId) => {
-  const user = await User.findById(userId)
-    .populate("roles", "name description")
-    .populate("company", "name acronym")
-    .populate("unit", "name locationCode")
-    .populate("department", "name code")
-    .populate("cadre", "name")
-    .populate("grade", "code")
-    .populate("designation", "name")
-    .populate("reportingManager", "fullName employeeCode")
-    .lean();
-
-  if (!user) throw new Error("User not found");
-  return user;
-};
-

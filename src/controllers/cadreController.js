@@ -1,12 +1,26 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
-import * as unitService from "../services/unitService.js";
+import * as cadreService from "../services/cadreService.js";
 
-export const getUnit = asyncHandler(async (req, res) => {
+export const getAllCadre = asyncHandler(async (req, res) => {
   try {
-    const data = await unitService.getAllUnits(req.body);
+    const data = await cadreService.getAllCadre(req.body);
     res.status(200).json({
       success: true,
-      count: data.length,
+      data,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+});
+
+export const getCadreById = asyncHandler(async (req, res) => {
+  try {
+    const data = await cadreService.getCadreById(req.params.id);
+    res.status(200).json({
+      success: true,
       data: data,
     });
   } catch (err) {
@@ -17,27 +31,12 @@ export const getUnit = asyncHandler(async (req, res) => {
   }
 });
 
-export const getUnitById = asyncHandler(async (req, res) => {
+export const createCadre = asyncHandler(async (req, res) => {
   try {
-    const data = await unitService.getUnitById(req.params.id);
-    res.status(200).json({
-      success: true,
-      data: data,
-    });
-  } catch (err) {
-    res.status(500).json({
-      success: false,
-      message: err.message,
-    });
-  }
-});
-
-export const createUnit = asyncHandler(async (req, res) => {
-  try {
-    const data = await unitService.createUnit(req.body);
+    const data = await cadreService.createCadre(req.body);
     res.status(201).json({
       success: true,
-      message: "Unit created successfully",
+      message: "Cadre created successfully",
       data: data,
     });
   } catch (err) {
@@ -48,12 +47,12 @@ export const createUnit = asyncHandler(async (req, res) => {
   }
 });
 
-export const updateUnit = asyncHandler(async (req, res) => {
+export const updateCadre = asyncHandler(async (req, res) => {
   try {
-    const data = await unitService.updateUnit(req.params.id, req.body);
+    const data = await cadreService.updateCadre(req.params.id, req.body);
     res.status(200).json({
       success: true,
-      message: "Unit updated successfully",
+      message: "Cadre updated successfully",
       data: data,
     });
   } catch (err) {
@@ -64,14 +63,13 @@ export const updateUnit = asyncHandler(async (req, res) => {
   }
 });
 
-export const deleteUnit = asyncHandler(async (req, res) => {
-  const userId = req.user._id;
-
+export const deleteCadre = asyncHandler(async (req, res) => {
   try {
-    await unitService.deleteUnit(req.params.id, userId);
+    const userId = req.user._id;
+    await cadreService.deleteCadre(req.params.id, userId);
     res.status(200).json({
       success: true,
-      message: "Unit deleted successfully",
+      message: "Cadre deleted successfully",
     });
   } catch (err) {
     res.status(500).json({

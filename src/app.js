@@ -1,11 +1,15 @@
 import express from "express";
 import cors from "cors";
 import authRoutes from "./routes/authRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 import roleRoutes from "./routes/roleRoutes.js";
 import permissionRoutes from "./routes/permissionRoutes.js";
 import companiesRoutes from "./routes/companyRoutes.js";
 import unitRoutes from "./routes/unitRoutes.js";
 import depRoutes from "./routes/departmentRoutes.js";
+import cadreRoutes from "./routes/cadreRoutes.js";
+import gradeRoutes from "./routes/gradeRoute.js";
+import designationRoutes from "./routes/designationRoutes.js";
 
 const app = express();
 
@@ -36,6 +40,7 @@ if (process.env.NODE_ENV === "development") {
 // --- ROUTES ---
 
 app.use("/api/auth", authRoutes);
+app.use("/api/user", userRoutes);
 app.use("/api/roles", roleRoutes);
 app.use("/api/permissions", permissionRoutes);
 //**Company & Unit Master */
@@ -45,6 +50,14 @@ app.use("/api/units", unitRoutes);
 //**Department Master */
 app.use("/api/department", depRoutes);
 
+//**Cadre Master */
+app.use("/api/cadres", cadreRoutes);
+
+//**Grade Master */
+app.use("/api/grades", gradeRoutes);
+
+//**Designation Master */
+app.use("/api/designations", designationRoutes);
 
 // --- GLOBAL ERROR HANDLER ---
 app.use((err, req, res, next) => {

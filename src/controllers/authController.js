@@ -81,18 +81,3 @@ export const logout = asyncHandler(async (req, res) => {
     });
   }
 });
-
-export const getProfile = asyncHandler(async (req, res) => {
-  try {
-    const user = await authService.getMe(req.user._id);
-    res.status(200).json({
-      success: true,
-      data: user,
-    });
-  } catch (err) {
-    res.status(500).json({
-      success: false,
-      message: err.message,
-    });
-  }
-});

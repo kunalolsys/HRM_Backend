@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { authenticate } from "../middlewares/auth.js";
+import { authenticate, hasPermission } from "../middlewares/auth.js";
 import {
   createUnit,
   deleteUnit,
@@ -12,10 +12,10 @@ const router = Router();
 
 router.use(authenticate);
 
-router.get("/", getUnit);
-router.get("/:id", getUnitById);
-router.post("/", createUnit);
-router.put("/:id", updateUnit);
-router.delete("/:id", deleteUnit);
+router.post("/list", hasPermission("manage_units"), getUnit);
+router.get("/:id", hasPermission("manage_units"), getUnitById);
+router.post("/", hasPermission("manage_units"), createUnit);
+router.put("/:id", hasPermission("manage_units"), updateUnit);
+router.delete("/:id", hasPermission("manage_units"), deleteUnit);
 
 export default router;

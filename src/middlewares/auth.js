@@ -34,7 +34,10 @@ export const authenticate = async (req, res, next) => {
     if (decoded.type && decoded.type !== "access") {
       return res
         .status(401)
-        .json({ success: false, message: "Invalid token type. Use access token." });
+        .json({
+          success: false,
+          message: "Invalid token type. Use access token.",
+        });
     }
 
     const user = await User.findById(decoded.id)
@@ -77,7 +80,6 @@ export const hasPermission = (requiredPermission) => {
       const userRoles = await Role.find({
         _id: { $in: req.user.roles.map((r) => r._id || r) },
       }).populate("permissions", "name");
-
       const userPermissions = new Set();
       userRoles.forEach((role) => {
         role.permissions.forEach((perm) => userPermissions.add(perm.name));
@@ -106,7 +108,7 @@ export const hasPermission = (requiredPermission) => {
 // ─── Role Check ────────────────────────────────────────────────
 
 export const hasAnyRole = (...allowedRoles) => {
-  console.log(allowedRoles)
+  console.log(allowedRoles);
   return (req, res, next) => {
     if (!req.user) {
       return res
@@ -127,4 +129,3 @@ export const hasAnyRole = (...allowedRoles) => {
     next();
   };
 };
-

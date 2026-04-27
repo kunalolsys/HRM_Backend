@@ -1,10 +1,46 @@
 import Department from "../models/Department.js";
 
-// ─── Get All Companies ─────────────────────────────────────────
-export const getAllDepartment = async () => {
-  return await Department.find({ isDeleted: false })
-    .sort({ createdAt: -1 })
-    .lean();
+// ─── Get All Departments ─────────────────────────────────────────
+export const getAllDepartment = async (body) => {
+  const page = Math.max(parseInt(body.page) || 1, 1);
+  const limit = Math.min(parseInt(body.limit) || 10, 100);
+  const skip = (page - 1) * limit;
+  const sortField = body.sortBy || "createdAt";
+  const sortOrder = body.order === "asc" ? 1 : -1;
+  const filter = {
+    isDeleted: false,
+  };
+
+  // ─── Search ─────────────────────────────
+  if (body.search) {
+    filter.$or = [
+      { departmentName: { $regex: body.search, $options: "i" } },
+      { depCode: { $regex: body.search, $options: "i" } },
+    ];
+  }
+  if (body.status) {
+    filter.status = body.status;
+  }
+
+  const [data, total] = await Promise.all([
+    Department.find(filter)
+      .sort({ [sortField]: sortOrder })
+      .skip(skip)
+      .limit(limit)
+      .lean(),
+
+    Department.countDocuments(filter),
+  ]);
+
+  return {
+    data,
+    pagination: {
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    },
+  };
 };
 
 // ─── Get Department By ID ─────────────────────────────────────────
@@ -40,10 +76,7 @@ export const updateDepartment = async (id, updateData) => {
   const department = await Department.findOneAndUpdate(
     { _id: id, isDeleted: false },
     updateData,
-    {
-      new: true,
-      runValidators: true,
-    },
+    { returnDocument: "after", runValidators: true },
   );
 
   if (!department) throw new Error("Department not found");

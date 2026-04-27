@@ -2,8 +2,44 @@ import Company from "../models/Company.js";
 import Unit from "../models/Unit.js";
 
 // ─── Get All Units ─────────────────────────────────────────
-export const getAllUnits = async () => {
-  return await Unit.find({ isDeleted: false }).sort({ createdAt: -1 }).lean();
+export const getAllUnits = async (body) => {
+  const page = Math.max(parseInt(body.page) || 1, 1);
+  const limit = Math.min(parseInt(body.limit) || 10, 100);
+  const skip = (page - 1) * limit;
+  const sortField = body.sortBy || "createdAt";
+  const sortOrder = body.order === "asc" ? 1 : -1;
+  const filter = {
+    isDeleted: false,
+  };
+
+  // ─── Search ─────────────────────────────
+  if (body.search) {
+    filter.$or = [
+      { unitName: { $regex: body.search, $options: "i" } },
+      { locationCode: { $regex: body.search, $options: "i" } },
+    ];
+  }
+  if (body.company) {
+    filter.company = body.company;
+  }
+  const [data, total] = await Promise.all([
+    Unit.find(filter)
+      .sort({ [sortField]: sortOrder })
+      .skip(skip)
+      .limit(limit)
+      .lean(),
+
+    Unit.countDocuments(filter),
+  ]);
+  return {
+    data,
+    pagination: {
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    },
+  };
 };
 
 // ─── Get Unit By ID ─────────────────────────────────────────
@@ -91,7 +127,7 @@ export const updateUnit = async (id, updateData) => {
 
   // ─── Update ──────────────────────────────────────
   const updatedUnit = await Unit.findByIdAndUpdate(id, updateData, {
-    new: true,
+    returnDocument: "after",
     runValidators: true,
   }).populate("company", "entityName acronym");
 

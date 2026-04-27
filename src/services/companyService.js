@@ -1,10 +1,41 @@
 import Company from "../models/Company.js";
 
 // ─── Get All Companies ─────────────────────────────────────────
-export const getAllCompany = async () => {
-  return await Company.find({ isDeleted: false })
-    .sort({ createdAt: -1 })
-    .lean();
+export const getAllCompany = async (body) => {
+  const page = Math.max(parseInt(body.page) || 1, 1);
+  const limit = Math.min(parseInt(body.limit) || 10, 100);
+  const skip = (page - 1) * limit;
+  const sortField = body.sortBy || "createdAt";
+  const sortOrder = body.order === "asc" ? 1 : -1;
+  const filter = {
+    isDeleted: false,
+  };
+
+  // ─── Search ─────────────────────────────
+  if (body.search) {
+    filter.$or = [
+      { entityName: { $regex: body.search, $options: "i" } },
+      { acronym: { $regex: body.search, $options: "i" } },
+    ];
+  }
+  const [data, total] = await Promise.all([
+    Company.find(filter)
+      .sort({ [sortField]: sortOrder })
+      .skip(skip)
+      .limit(limit)
+      .lean(),
+
+    Company.countDocuments(filter),
+  ]);
+  return {
+    data,
+    pagination: {
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    },
+  };
 };
 
 // ─── Get Company By ID ─────────────────────────────────────────
@@ -39,10 +70,7 @@ export const updateCompany = async (id, updateData) => {
   const company = await Company.findOneAndUpdate(
     { _id: id, isDeleted: false },
     updateData,
-    {
-      new: true,
-      runValidators: true,
-    },
+    { returnDocument: "after", runValidators: true },
   );
 
   if (!company) throw new Error("Company not found");

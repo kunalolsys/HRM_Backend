@@ -30,10 +30,7 @@ export const updatePermission = async (id, updateData) => {
   const permission = await Permission.findByIdAndUpdate(
     { _id: id, isDeleted: false },
     updateData,
-    {
-      new: true,
-      runValidators: true,
-    },
+    { returnDocument: "after", runValidators: true },
   );
 
   if (!permission) throw new Error("Permission not found");

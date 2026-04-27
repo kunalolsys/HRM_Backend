@@ -1,6 +1,7 @@
 import { Router } from "express";
-import { authenticate } from "../middlewares/auth.js";
-import {deleteDep, 
+import { authenticate, hasPermission } from "../middlewares/auth.js";
+import {
+  deleteDep,
   createDep,
   getAllDep,
   getDepById,
@@ -11,10 +12,10 @@ const router = Router();
 
 router.use(authenticate);
 
-router.get("/", getAllDep);
-router.get("/:id", getDepById);
-router.post("/", createDep);
-router.put("/:id", updateDep);
-router.delete("/:id", deleteDep);
+router.post("/list", hasPermission("manage_departments"), getAllDep);
+router.get("/:id", hasPermission("manage_departments"), getDepById);
+router.post("/", hasPermission("manage_departments"), createDep);
+router.put("/:id", hasPermission("manage_departments"), updateDep);
+router.delete("/:id", hasPermission("manage_departments"), deleteDep);
 
 export default router;

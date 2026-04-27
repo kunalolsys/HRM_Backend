@@ -30,10 +30,7 @@ export const updateRole = async (id, updateData) => {
   const role = await Role.findByIdAndUpdate(
     { _id: id, isDeleted: false },
     updateData,
-    {
-      new: true,
-      runValidators: true,
-    },
+    { returnDocument: "after", runValidators: true },
   ).populate("permissions", "name description module");
 
   if (!role) throw new Error("Role not found");

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { authenticate } from "../middlewares/auth.js";
+import { authenticate, hasPermission } from "../middlewares/auth.js";
 import {
   createComp,
   deleteComp,
@@ -12,10 +12,10 @@ const router = Router();
 
 router.use(authenticate);
 
-router.get("/", getAllComp);
-router.get("/:id", getCompById);
-router.post("/", createComp);
-router.put("/:id", updateComp);
-router.delete("/:id", deleteComp);
+router.post("/list", hasPermission("manage_companies"), getAllComp);
+router.get("/:id", hasPermission("manage_companies"), getCompById);
+router.post("/", hasPermission("manage_companies"), createComp);
+router.put("/:id", hasPermission("manage_companies"), updateComp);
+router.delete("/:id", hasPermission("manage_companies"), deleteComp);
 
 export default router;
