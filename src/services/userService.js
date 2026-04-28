@@ -5,8 +5,8 @@ export const getUserById = async (userId) => {
     .populate("company", "name acronym")
     .populate("unit", "name locationCode")
     .populate("department", "name code")
-    .populate("cadre", "name")
-    .populate("grade", "code")
+    .populate("cadre", "cadreName description")
+    .populate("grade", "gradeCode")
     .populate("designation", "name")
     .populate("reportingManager", "fullName employeeCode")
     .lean();
@@ -14,6 +14,19 @@ export const getUserById = async (userId) => {
   if (!user) throw new Error("User not found");
   return user;
 };
+
+export const updateUser = async (id, updateData) => {
+  const user = await User.findOneAndUpdate(
+    { _id: id, isDeleted: false },
+    updateData,
+    { returnDocument: "after", runValidators: true },
+  );
+
+  if (!user) throw new Error("Cadre not found");
+
+  return user;
+};
+
 //**Soft Delete User */
 export const deleteUser = async (id, userId) => {
   const user = await User.findByIdAndDelete(

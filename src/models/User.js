@@ -40,47 +40,42 @@ const userSchema = new mongoose.Schema(
     company: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Company",
+      required: true,
     },
     unit: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Unit",
+      required: true,
     },
     department: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Department",
+      required: true,
     },
     cadre: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Cadre",
+      required: true,
     },
     grade: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Grade",
+      required: true,
     },
     designation: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Designation",
+      required: true,
     },
     reportingManager: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       default: null,
+      // required: true,
     },
     joiningDate: {
       type: Date,
-    },
-    mobileNumber: {
-      type: String,
-      trim: true,
-    },
-    personalEmail: {
-      type: String,
-      trim: true,
-      lowercase: true,
-    },
-    residentialAddress: {
-      type: String,
-      trim: true,
+      required: true,
     },
     status: {
       type: String,

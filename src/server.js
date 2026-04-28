@@ -2,6 +2,9 @@ import dotenv from "dotenv";
 import app from "./app.js";
 import mongoose from "mongoose";
 import { initSocket } from "./socket/socket.js";
+import { getFinancialYear } from "./utils/helper.js";
+import { seedPmsCycles } from "./seeder/fyCycle.js";
+import { startPmsCron } from "./crons/FY_Cron.js";
 
 dotenv.config();
 
@@ -30,14 +33,18 @@ mongoose.connection.on("disconnected", () => {
 mongoose
   .connect(MONGODB_URI)
   .then(() => {
-    server = app.listen(PORT, () => {
+    server = app.listen(PORT, async () => {
       const msg = `Server is running on port ${PORT}`;
       console.log(msg);
 
       // Start background cron jobs after server is up
       try {
-        // TODO: Import and start cron jobs
-        // import("./crons/index.js").then((cronModule) => cronModule.startCrons());
+        // ✅ 1. Startup safety (VERY IMPORTANT)
+        const fy = getFinancialYear();
+        await seedPmsCycles(fy);
+
+        // ✅ 2. Start cron
+        startPmsCron();
       } catch (err) {
         console.error("Failed to start crons", err);
       }

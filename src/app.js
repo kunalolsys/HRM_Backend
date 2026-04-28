@@ -10,6 +10,11 @@ import depRoutes from "./routes/departmentRoutes.js";
 import cadreRoutes from "./routes/cadreRoutes.js";
 import gradeRoutes from "./routes/gradeRoute.js";
 import designationRoutes from "./routes/designationRoutes.js";
+import timelineRoutes from "./routes/timelineRoutes.js";
+import uomRoutes from "./routes/uomRoutes.js";
+import goalCatRoutes from "./routes/goalCatRoutes.js";
+import kraRoutes from "./routes/kraRoutes.js";
+import goalLibRoutes from "./routes/goalLibRoutes.js";
 
 const app = express();
 
@@ -58,6 +63,21 @@ app.use("/api/grades", gradeRoutes);
 
 //**Designation Master */
 app.use("/api/designations", designationRoutes);
+
+//**Timeline Master */
+app.use("/api/timeline", timelineRoutes);
+
+//**UOM Master */
+app.use("/api/uom", uomRoutes);
+
+//**Goal Category Master */
+app.use("/api/goalCat", goalCatRoutes);
+
+//**KRA Master */
+app.use("/api/kra", kraRoutes);
+
+//**Goal Lib Master */
+app.use("/api/goal-library", goalLibRoutes);
 
 // --- GLOBAL ERROR HANDLER ---
 app.use((err, req, res, next) => {

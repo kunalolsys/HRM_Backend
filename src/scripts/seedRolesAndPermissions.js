@@ -3,6 +3,12 @@ import dotenv from "dotenv";
 import Permission from "../models/Permission.js";
 import Role from "../models/Role.js";
 import User from "../models/User.js";
+import Company from "../models/Company.js";
+import Department from "../models/Department.js";
+import Cadre from "../models/Cadre.js";
+import Grade from "../models/Grade.js";
+import Designation from "../models/Designation.js";
+import Unit from "../models/Unit.js";
 
 dotenv.config();
 
@@ -12,39 +18,137 @@ const MONGODB_URI =
   "mongodb://localhost:27017/pms";
 
 const permissionsData = [
-  { name: "manage_companies", description: "Manage companies", module: "Admin" },
+  {
+    name: "manage_companies",
+    description: "Manage companies",
+    module: "Admin",
+  },
   { name: "manage_units", description: "Manage units", module: "Admin" },
-  { name: "manage_departments", description: "Manage departments", module: "Admin" },
+  {
+    name: "manage_departments",
+    description: "Manage departments",
+    module: "Admin",
+  },
   { name: "manage_cadres", description: "Manage cadres", module: "Admin" },
   { name: "manage_grades", description: "Manage grades", module: "Admin" },
-  { name: "manage_designations", description: "Manage designations", module: "Admin" },
+  {
+    name: "manage_designations",
+    description: "Manage designations",
+    module: "Admin",
+  },
   { name: "manage_users", description: "Manage users", module: "Admin" },
-  { name: "manage_timelines", description: "Manage timelines", module: "Admin" },
+  {
+    name: "manage_timelines",
+    description: "Manage timelines",
+    module: "Admin",
+  },
   { name: "manage_uom", description: "Manage UOM", module: "Admin" },
-  { name: "manage_goal_library", description: "Manage goal library", module: "Admin" },
-  { name: "manage_training_master", description: "Manage training catalog", module: "Admin" },
-  { name: "manage_competency_bank", description: "Manage competency bank", module: "Admin" },
+  {
+    name: "manage_goal_category",
+    description: "Manage goal category",
+    module: "Admin",
+  },
+  {
+    name: "manage_kra",
+    description: "Manage KRA",
+    module: "Admin",
+  },
+  {
+    name: "manage_goal_library",
+    description: "Manage goal library",
+    module: "Admin",
+  },
+  {
+    name: "manage_training_master",
+    description: "Manage training catalog",
+    module: "Admin",
+  },
+  {
+    name: "manage_competency_bank",
+    description: "Manage competency bank",
+    module: "Admin",
+  },
   { name: "manage_own_goals", description: "Set own goals", module: "Goals" },
-  { name: "approve_team_goals", description: "Approve team goals", module: "Goals" },
-  { name: "goal_admin_override", description: "Override any goals", module: "Goals" },
-  { name: "submit_self_review", description: "Submit quarterly self-review", module: "Reviews" },
-  { name: "conduct_team_reviews", description: "Conduct team reviews", module: "Reviews" },
-  { name: "view_audit_tracker", description: "View audit tracker", module: "Reviews" },
-  { name: "conduct_appraisal", description: "Conduct annual appraisal", module: "Appraisal" },
-  { name: "view_9box_grid", description: "View 9-box talent grid", module: "Appraisal" },
-  { name: "hr_assessment_console", description: "HR assessment console", module: "Appraisal" },
-  { name: "view_trainings", description: "View assigned trainings", module: "T&D" },
-  { name: "manage_corporate_training", description: "Manage corporate training", module: "T&D" },
+  {
+    name: "approve_team_goals",
+    description: "Approve team goals",
+    module: "Goals",
+  },
+  {
+    name: "goal_admin_override",
+    description: "Override any goals",
+    module: "Goals",
+  },
+  {
+    name: "submit_self_review",
+    description: "Submit quarterly self-review",
+    module: "Reviews",
+  },
+  {
+    name: "conduct_team_reviews",
+    description: "Conduct team reviews",
+    module: "Reviews",
+  },
+  {
+    name: "view_audit_tracker",
+    description: "View audit tracker",
+    module: "Reviews",
+  },
+  {
+    name: "conduct_appraisal",
+    description: "Conduct annual appraisal",
+    module: "Appraisal",
+  },
+  {
+    name: "view_9box_grid",
+    description: "View 9-box talent grid",
+    module: "Appraisal",
+  },
+  {
+    name: "hr_assessment_console",
+    description: "HR assessment console",
+    module: "Appraisal",
+  },
+  {
+    name: "view_trainings",
+    description: "View assigned trainings",
+    module: "T&D",
+  },
+  {
+    name: "manage_corporate_training",
+    description: "Manage corporate training",
+    module: "T&D",
+  },
   { name: "view_reports", description: "View reports", module: "Reports" },
-  { name: "view_dashboard", description: "View dashboard", module: "Dashboard" },
+  {
+    name: "view_dashboard",
+    description: "View dashboard",
+    module: "Dashboard",
+  },
   { name: "all_access", description: "Full system access", module: "System" },
 ];
 
 const roleDefinitions = [
-  { name: "Admin", description: "System administrator with full access", isDefault: false },
-  { name: "HR", description: "HR process owner with oversight", isDefault: false },
-  { name: "Management", description: "Top leadership and executives", isDefault: false },
-  { name: "Manager", description: "Team lead with dual self + team duties", isDefault: false },
+  {
+    name: "Admin",
+    description: "System administrator with full access",
+    isDefault: false,
+  },
+  {
+    name: "HR",
+    description: "HR process owner with oversight",
+    isDefault: false,
+  },
+  {
+    name: "Management",
+    description: "Top leadership and executives",
+    isDefault: false,
+  },
+  {
+    name: "Manager",
+    description: "Team lead with dual self + team duties",
+    isDefault: false,
+  },
   { name: "Employee", description: "Individual contributor", isDefault: true },
 ];
 
@@ -124,15 +228,50 @@ async function seed() {
     // Create seed admin user
     const adminRole = insertedRoles.find((r) => r.name === "Admin");
     if (adminRole) {
-      await User.create({
-        employeeCode: "ADMIN001",
-        fullName: "System Administrator",
-        email: "admin@pragati.com",
-        password: "admin123",
-        roles: [adminRole._id],
-        status: "Active",
-      });
-      console.log("Created seed admin user: admin@pragati.com / admin123");
+      const company = await Company.findOne();
+      const unit = await Unit.findOne();
+      const department = await Department.findOne();
+      const cadre = await Cadre.findOne();
+      const grade = await Grade.findOne();
+      const designation = await Designation.findOne();
+      if (
+        !company ||
+        !unit ||
+        !department ||
+        !cadre ||
+        !grade ||
+        !designation
+      ) {
+        throw new Error("❌ Master data missing. Seed masters first.");
+      }
+      const existingAdmin = await User.findOne({ email: "admin@pragati.com" });
+
+      if (!existingAdmin) {
+        await User.create({
+          employeeCode: "ADMIN001",
+          fullName: "System Administrator",
+          email: "admin@pragati.com",
+          password: "admin123",
+          roles: [adminRole._id],
+
+          company: company._id,
+          unit: unit._id,
+          department: department._id,
+          cadre: cadre._id,
+          grade: grade._id,
+          designation: designation._id,
+
+          reportingManager: null,
+
+          joiningDate: new Date(),
+
+          status: "Active",
+        });
+
+        console.log("✅ Admin user created");
+      } else {
+        console.log("⚠️ Admin already exists");
+      }
     }
 
     console.log("\nSeeding completed successfully");
@@ -144,4 +283,3 @@ async function seed() {
 }
 
 seed();
-
