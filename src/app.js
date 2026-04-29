@@ -16,6 +16,8 @@ import goalCatRoutes from "./routes/goalCat.routes.js";
 import kraRoutes from "./routes/kra.routes.js";
 import goalLibRoutes from "./routes/goalLib.routes.js";
 import trainingRoutes from "./routes/training.routes.js";
+import competencyBankRoutes from "./routes/competencyBank.routes.js";
+import myGoalsRoutes from "./routes/myGoals.routes.js";
 
 const app = express();
 
@@ -82,6 +84,12 @@ app.use("/api/goal-library", goalLibRoutes);
 
 //**Training Master */
 app.use("/api/training", trainingRoutes);
+
+//**Competency Bank Master */
+app.use("/api/competency", competencyBankRoutes);
+
+//**My Goals */
+app.use("/api/myGoals", myGoalsRoutes);
 
 // --- GLOBAL ERROR HANDLER ---
 app.use((err, req, res, next) => {
