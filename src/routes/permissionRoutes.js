@@ -5,7 +5,7 @@ import {
   createPermission,
   updatePermission,
   deletePermission,
-} from "../controllers/permissionController.js";
+} from "../controllers/permission.controller.js";
 import { authenticate, hasAnyRole } from "../middlewares/auth.js";
 
 const router = Router();

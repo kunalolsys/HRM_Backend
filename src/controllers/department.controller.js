@@ -1,9 +1,9 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
-import * as gradeService from "../services/gradeService.js";
+import * as departmentService from "../services/department.service.js";
 
-export const getAllGrade = asyncHandler(async (req, res) => {
+export const getAllDep = asyncHandler(async (req, res) => {
   try {
-    const data = await gradeService.getAllGrade(req.body);
+    const data = await departmentService.getAllDepartment(req.body);
     res.status(200).json({
       success: true,
       data,
@@ -16,9 +16,9 @@ export const getAllGrade = asyncHandler(async (req, res) => {
   }
 });
 
-export const getGradeById = asyncHandler(async (req, res) => {
+export const getDepById = asyncHandler(async (req, res) => {
   try {
-    const data = await gradeService.getGradeById(req.params.id);
+    const data = await departmentService.getDepartmentById(req.params.id);
     res.status(200).json({
       success: true,
       data: data,
@@ -31,12 +31,12 @@ export const getGradeById = asyncHandler(async (req, res) => {
   }
 });
 
-export const createGrade = asyncHandler(async (req, res) => {
+export const createDep = asyncHandler(async (req, res) => {
   try {
-    const data = await gradeService.createGrade(req.body);
+    const data = await departmentService.createDepartment(req.body);
     res.status(201).json({
       success: true,
-      message: "Grade created successfully",
+      message: "Department created successfully",
       data: data,
     });
   } catch (err) {
@@ -47,12 +47,15 @@ export const createGrade = asyncHandler(async (req, res) => {
   }
 });
 
-export const updateGrade = asyncHandler(async (req, res) => {
+export const updateDep = asyncHandler(async (req, res) => {
   try {
-    const data = await gradeService.updateGrade(req.params.id, req.body);
+    const data = await departmentService.updateDepartment(
+      req.params.id,
+      req.body,
+    );
     res.status(200).json({
       success: true,
-      message: "Grade updated successfully",
+      message: "Department updated successfully",
       data: data,
     });
   } catch (err) {
@@ -63,13 +66,13 @@ export const updateGrade = asyncHandler(async (req, res) => {
   }
 });
 
-export const deleteGrade = asyncHandler(async (req, res) => {
+export const deleteDep = asyncHandler(async (req, res) => {
   try {
     const userId = req.user._id;
-    await gradeService.deleteGrade(req.params.id, userId);
+    await departmentService.deleteDepartment(req.params.id, userId);
     res.status(200).json({
       success: true,
-      message: "Grade deleted successfully",
+      message: "Department deleted successfully",
     });
   } catch (err) {
     res.status(500).json({

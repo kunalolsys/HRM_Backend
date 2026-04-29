@@ -1,9 +1,9 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
-import * as kraService from "../services/kraService.js";
+import * as cadreService from "../services/cadre.service.js";
 
-export const getAllKRA = asyncHandler(async (req, res) => {
+export const getAllCadre = asyncHandler(async (req, res) => {
   try {
-    const data = await kraService.getAllKRA(req.body);
+    const data = await cadreService.getAllCadre(req.body);
     res.status(200).json({
       success: true,
       data,
@@ -16,9 +16,9 @@ export const getAllKRA = asyncHandler(async (req, res) => {
   }
 });
 
-export const getKRAById = asyncHandler(async (req, res) => {
+export const getCadreById = asyncHandler(async (req, res) => {
   try {
-    const data = await kraService.getKRAById(req.params.id);
+    const data = await cadreService.getCadreById(req.params.id);
     res.status(200).json({
       success: true,
       data: data,
@@ -31,12 +31,12 @@ export const getKRAById = asyncHandler(async (req, res) => {
   }
 });
 
-export const createKRA = asyncHandler(async (req, res) => {
+export const createCadre = asyncHandler(async (req, res) => {
   try {
-    const data = await kraService.createKRA(req.body);
+    const data = await cadreService.createCadre(req.body);
     res.status(201).json({
       success: true,
-      message: "KRA created successfully",
+      message: "Cadre created successfully",
       data: data,
     });
   } catch (err) {
@@ -47,12 +47,12 @@ export const createKRA = asyncHandler(async (req, res) => {
   }
 });
 
-export const updateKRA = asyncHandler(async (req, res) => {
+export const updateCadre = asyncHandler(async (req, res) => {
   try {
-    const data = await kraService.updateKRA(req.params.id, req.body);
+    const data = await cadreService.updateCadre(req.params.id, req.body);
     res.status(200).json({
       success: true,
-      message: "KRA updated successfully",
+      message: "Cadre updated successfully",
       data: data,
     });
   } catch (err) {
@@ -63,13 +63,13 @@ export const updateKRA = asyncHandler(async (req, res) => {
   }
 });
 
-export const deleteKRA = asyncHandler(async (req, res) => {
+export const deleteCadre = asyncHandler(async (req, res) => {
   try {
     const userId = req.user._id;
-    await kraService.deleteKRA(req.params.id, userId);
+    await cadreService.deleteCadre(req.params.id, userId);
     res.status(200).json({
       success: true,
-      message: "KRA deleted successfully",
+      message: "Cadre deleted successfully",
     });
   } catch (err) {
     res.status(500).json({

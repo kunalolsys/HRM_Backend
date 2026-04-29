@@ -6,7 +6,7 @@ import {
   getAllKRA,
   getKRAById,
   updateKRA,
-} from "../controllers/kraController.js";
+} from "../controllers/kra.controller.js";
 
 const router = Router();
 

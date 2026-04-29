@@ -3,7 +3,7 @@ import { authenticate, hasPermission } from "../middlewares/auth.js";
 import {
   getTimeline,
   updateTimeline,
-} from "../controllers/timeLineController.js";
+} from "../controllers/timeline.controller.js";
 
 const router = Router();
 router.use(authenticate);

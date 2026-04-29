@@ -6,7 +6,7 @@ import {
   getAllDesignation,
   getDesignationById,
   updateDesignation,
-} from "../controllers/designationController.js";
+} from "../controllers/designation.controller.js";
 
 const router = Router();
 

@@ -6,7 +6,7 @@ import {
   getAllGoalCat,
   getGoalCatById,
   updateGoalCat,
-} from "../controllers/goalCatController.js";
+} from "../controllers/goalCat.controller.js";
 
 const router = Router();
 

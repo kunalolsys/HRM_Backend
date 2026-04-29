@@ -6,7 +6,7 @@ import {
   getAllGrade,
   getGradeById,
   updateGrade,
-} from "../controllers/gradeController.js";
+} from "../controllers/grade.controller.js";
 
 const router = Router();
 

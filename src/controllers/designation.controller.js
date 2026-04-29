@@ -1,9 +1,9 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
-import * as uomService from "../services/uomService.js";
+import * as designationService from "../services/designation.service.js";
 
-export const getAllUOM = asyncHandler(async (req, res) => {
+export const getAllDesignation = asyncHandler(async (req, res) => {
   try {
-    const data = await uomService.getAllUOM(req.body);
+    const data = await designationService.getAllDesignation(req.body);
     res.status(200).json({
       success: true,
       data,
@@ -16,9 +16,9 @@ export const getAllUOM = asyncHandler(async (req, res) => {
   }
 });
 
-export const getUOMById = asyncHandler(async (req, res) => {
+export const getDesignationById = asyncHandler(async (req, res) => {
   try {
-    const data = await uomService.getUOMById(req.params.id);
+    const data = await designationService.getDesignationById(req.params.id);
     res.status(200).json({
       success: true,
       data: data,
@@ -31,12 +31,12 @@ export const getUOMById = asyncHandler(async (req, res) => {
   }
 });
 
-export const createUOM = asyncHandler(async (req, res) => {
+export const createDesignation = asyncHandler(async (req, res) => {
   try {
-    const data = await uomService.createUOM(req.body);
+    const data = await designationService.createDesignation(req.body);
     res.status(201).json({
       success: true,
-      message: "UOM created successfully",
+      message: "Designation created successfully",
       data: data,
     });
   } catch (err) {
@@ -47,12 +47,15 @@ export const createUOM = asyncHandler(async (req, res) => {
   }
 });
 
-export const updateUOM = asyncHandler(async (req, res) => {
+export const updateDesignation = asyncHandler(async (req, res) => {
   try {
-    const data = await uomService.updateUOM(req.params.id, req.body);
+    const data = await designationService.updateDesignation(
+      req.params.id,
+      req.body,
+    );
     res.status(200).json({
       success: true,
-      message: "UOM updated successfully",
+      message: "Designation updated successfully",
       data: data,
     });
   } catch (err) {
@@ -63,13 +66,13 @@ export const updateUOM = asyncHandler(async (req, res) => {
   }
 });
 
-export const deleteUOM = asyncHandler(async (req, res) => {
+export const deleteDesignation = asyncHandler(async (req, res) => {
   try {
     const userId = req.user._id;
-    await uomService.deleteUOM(req.params.id, userId);
+    await designationService.deleteDesignation(req.params.id, userId);
     res.status(200).json({
       success: true,
-      message: "UOM deleted successfully",
+      message: "Designation deleted successfully",
     });
   } catch (err) {
     res.status(500).json({

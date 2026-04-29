@@ -6,7 +6,7 @@ import {
   getGoalLibById,
   removeGoalLib,
   updateGoalLib,
-} from "../controllers/goalLibraryController.js";
+} from "../controllers/goalLibrary.controller.js";
 
 const router = Router();
 

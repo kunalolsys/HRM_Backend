@@ -1,5 +1,5 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
-import * as roleService from "../services/roleService.js";
+import * as roleService from "../services/role.service.js";
 
 export const getRoles = asyncHandler(async (req, res) => {
   try {

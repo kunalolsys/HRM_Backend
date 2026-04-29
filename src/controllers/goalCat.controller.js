@@ -1,9 +1,9 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
-import * as departmentService from "../services/departmentService.js";
+import * as goalCatService from "../services/goalCat.service.js";
 
-export const getAllDep = asyncHandler(async (req, res) => {
+export const getAllGoalCat = asyncHandler(async (req, res) => {
   try {
-    const data = await departmentService.getAllDepartment(req.body);
+    const data = await goalCatService.getAllGoalCategory(req.body);
     res.status(200).json({
       success: true,
       data,
@@ -16,9 +16,9 @@ export const getAllDep = asyncHandler(async (req, res) => {
   }
 });
 
-export const getDepById = asyncHandler(async (req, res) => {
+export const getGoalCatById = asyncHandler(async (req, res) => {
   try {
-    const data = await departmentService.getDepartmentById(req.params.id);
+    const data = await goalCatService.getGoalCategoryById(req.params.id);
     res.status(200).json({
       success: true,
       data: data,
@@ -31,12 +31,12 @@ export const getDepById = asyncHandler(async (req, res) => {
   }
 });
 
-export const createDep = asyncHandler(async (req, res) => {
+export const createGoalCat = asyncHandler(async (req, res) => {
   try {
-    const data = await departmentService.createDepartment(req.body);
+    const data = await goalCatService.createGoalCategory(req.body);
     res.status(201).json({
       success: true,
-      message: "Department created successfully",
+      message: "Goal category created successfully",
       data: data,
     });
   } catch (err) {
@@ -47,15 +47,15 @@ export const createDep = asyncHandler(async (req, res) => {
   }
 });
 
-export const updateDep = asyncHandler(async (req, res) => {
+export const updateGoalCat = asyncHandler(async (req, res) => {
   try {
-    const data = await departmentService.updateDepartment(
+    const data = await goalCatService.updateGoalCategory(
       req.params.id,
       req.body,
     );
     res.status(200).json({
       success: true,
-      message: "Department updated successfully",
+      message: "Goal category updated successfully",
       data: data,
     });
   } catch (err) {
@@ -66,13 +66,13 @@ export const updateDep = asyncHandler(async (req, res) => {
   }
 });
 
-export const deleteDep = asyncHandler(async (req, res) => {
+export const deleteGoalCat = asyncHandler(async (req, res) => {
   try {
     const userId = req.user._id;
-    await departmentService.deleteDepartment(req.params.id, userId);
+    await goalCatService.deleteGoalCategory(req.params.id, userId);
     res.status(200).json({
       success: true,
-      message: "Department deleted successfully",
+      message: "Goal category deleted successfully",
     });
   } catch (err) {
     res.status(500).json({

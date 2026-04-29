@@ -1,5 +1,5 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
-import * as userService from "../services/userService.js";
+import * as userService from "../services/user.service.js";
 
 export const getUserProfile = asyncHandler(async (req, res) => {
   try {

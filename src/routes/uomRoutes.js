@@ -6,7 +6,7 @@ import {
   getAllUOM,
   getUOMById,
   updateUOM,
-} from "../controllers/uomController.js";
+} from "../controllers/uom.controller.js";
 
 const router = Router();
 

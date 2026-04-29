@@ -6,7 +6,7 @@ import {
   getAllCadre,
   getCadreById,
   updateCadre,
-} from "../controllers/cadreController.js";
+} from "../controllers/cadre.controller.js";
 
 const router = Router();
 

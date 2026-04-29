@@ -6,7 +6,7 @@ import {
   updateRole,
   deleteRole,
   assignPermissions,
-} from "../controllers/roleController.js";
+} from "../controllers/role.controller.js";
 import { authenticate, hasAnyRole } from "../middlewares/auth.js";
 
 const router = Router();

@@ -6,7 +6,7 @@ import {
   getUnit,
   getUnitById,
   updateUnit,
-} from "../controllers/unitController.js";
+} from "../controllers/unit.controller.js";
 
 const router = Router();
 

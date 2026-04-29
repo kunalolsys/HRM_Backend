@@ -6,7 +6,7 @@ import {
   getAllDep,
   getDepById,
   updateDep,
-} from "../controllers/departmentController.js";
+} from "../controllers/department.controller.js";
 
 const router = Router();
 

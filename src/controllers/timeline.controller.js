@@ -1,5 +1,5 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
-import * as timelineService from "../services/timelineService.js";
+import * as timelineService from "../services/timeline.service.js";
 
 export const getTimeline = asyncHandler(async (req, res) => {
   try {

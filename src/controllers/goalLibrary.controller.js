@@ -1,4 +1,4 @@
-import * as goalLibraryService from "../services/goalLibraryService.js";
+import * as goalLibraryService from "../services/goalLibrary.service.js";
 
 export const createGoalLib = async (req, res) => {
   try {

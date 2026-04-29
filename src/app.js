@@ -15,6 +15,7 @@ import uomRoutes from "./routes/uomRoutes.js";
 import goalCatRoutes from "./routes/goalCatRoutes.js";
 import kraRoutes from "./routes/kraRoutes.js";
 import goalLibRoutes from "./routes/goalLibRoutes.js";
+import trainingRoutes from "./routes/trainingRoutes.js";
 
 const app = express();
 
@@ -78,6 +79,9 @@ app.use("/api/kra", kraRoutes);
 
 //**Goal Lib Master */
 app.use("/api/goal-library", goalLibRoutes);
+
+//**Training Master */
+app.use("/api/training", trainingRoutes);
 
 // --- GLOBAL ERROR HANDLER ---
 app.use((err, req, res, next) => {

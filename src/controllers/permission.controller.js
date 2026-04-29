@@ -1,5 +1,5 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
-import * as permissionService from "../services/permissionService.js";
+import * as permissionService from "../services/permission.service.js";
 
 export const getPermissions = asyncHandler(async (req, res) => {
   try {

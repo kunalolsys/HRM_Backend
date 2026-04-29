@@ -6,7 +6,7 @@ import {
   getAllComp,
   getCompById,
   updateComp,
-} from "../controllers/companyController.js";
+} from "../controllers/company.controller.js";
 
 const router = Router();
 
