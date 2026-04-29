@@ -89,7 +89,7 @@ app.use("/api/training", trainingRoutes);
 app.use("/api/competency", competencyBankRoutes);
 
 //**My Goals */
-app.use("/api/myGoals", myGoalsRoutes);
+app.use("/api/my-goals", myGoalsRoutes);
 
 // --- GLOBAL ERROR HANDLER ---
 app.use((err, req, res, next) => {

@@ -1,25 +1,50 @@
-import { Router } from "express";
-import { authenticate, hasPermission } from "../middlewares/auth.js";
-import {
-  createMyGoals,
-  getMyGoals,
-  updateMyGoals,
-  submitMyGoals,
-  getTeamGoals,
-  approveTeamGoal,
-  deleteMyGoals,
-} from "../controllers/myGoals.controller.js";
+import express from "express";
+import * as myGoalController from "../controllers/myGoals.controller.js";
+import { authenticate } from "../middlewares/auth.js";
 
-const router = Router();
+const router = express.Router();
+
+// 🔐 All routes require auth
 router.use(authenticate);
 
-router.post("/", createMyGoals); // POST /api/myGoals/
-router.get("/my/:timelineId", getMyGoals); // GET /api/myGoals/my/:timelineId
-router.put("/:id", updateMyGoals);
-router.post("/:id/submit", submitMyGoals);
-router.get("/team/:timelineId", hasPermission("approve_team_goals"), getTeamGoals); // manager
-router.post("/team/:id/approve", hasPermission("approve_team_goals"), approveTeamGoal);
-router.delete("/:id", deleteMyGoals);
+// ─────────────────────────────────────────────
+// 🔹 Initialize My Goals (create once per year)
+// ─────────────────────────────────────────────
+router.post("/init", myGoalController.initMyGoals);
+
+// ─────────────────────────────────────────────
+// 🔹 Import from Global Goal Library
+// ─────────────────────────────────────────────
+router.post("/import", myGoalController.importFromLibrary);
+
+// ─────────────────────────────────────────────
+// 🔹 Cascade Manager Goals
+// ─────────────────────────────────────────────
+router.post("/cascade", myGoalController.cascadeManagerGoals);
+
+// ─────────────────────────────────────────────
+// 🔹 Get My Goals
+// ─────────────────────────────────────────────
+router.get("/", myGoalController.getMyGoals);
+
+// ─────────────────────────────────────────────
+// 🔹 Submit Goals (FINAL LOCK)
+// ─────────────────────────────────────────────
+router.post("/submit", myGoalController.submitGoals);
+
+// ─────────────────────────────────────────────
+// 🔹 Update Goal (target, weightage, uom)
+// ─────────────────────────────────────────────
+router.put("/:goalId", myGoalController.updateGoal);
+
+// ─────────────────────────────────────────────
+// 🔹 Delete Goal
+// ─────────────────────────────────────────────
+router.delete("/:goalId", myGoalController.deleteGoal);
+
+// ─────────────────────────────────────────────
+// 🔹 Add Comment
+// ─────────────────────────────────────────────
+router.post("/:goalId/comment", myGoalController.addComment);
 
 export default router;
-

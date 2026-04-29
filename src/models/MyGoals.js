@@ -46,7 +46,7 @@ const goalItemSchema = new mongoose.Schema(
     uom: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "UOM",
-      required: true,
+      // required: true,
     },
 
     // 👤 USER INPUT
