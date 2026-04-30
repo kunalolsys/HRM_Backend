@@ -42,7 +42,16 @@ export const getAllDepartment = async (body) => {
     },
   };
 };
+//**Get dropdown Data */
+export const getDropdownData = async () => {
+  const filter = { isDeleted: false };
+  const data = await Department.find(filter)
+    .select("_id departmentName") // 🔥 only required fields
+    .sort({ departmentName: 1 })
+    .lean();
 
+  return data;
+};
 // ─── Get Department By ID ─────────────────────────────────────────
 export const getDepartmentById = async (id) => {
   const department = await Department.findOne({

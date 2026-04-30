@@ -15,7 +15,20 @@ export const getAllDesignation = asyncHandler(async (req, res) => {
     });
   }
 });
-
+export const getAllDesignationForDrops = asyncHandler(async (req, res) => {
+  try {
+    const data = await designationService.getDropdownData(req.body);
+    res.status(200).json({
+      success: true,
+      data,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+});
 export const getDesignationById = asyncHandler(async (req, res) => {
   try {
     const data = await designationService.getDesignationById(req.params.id);

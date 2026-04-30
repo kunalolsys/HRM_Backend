@@ -44,7 +44,16 @@ export const getAllDesignation = async (body) => {
     },
   };
 };
+//**Get dropdown Data */
+export const getDropdownData = async () => {
+  const filter = { isDeleted: false };
+  const data = await Designation.find(filter)
+    .select("_id name") // 🔥 only required fields
+    .sort({ name: 1 })
+    .lean();
 
+  return data;
+};
 // ─── Get Designation By ID ─────────────────────────────────────────
 export const getDesignationById = async (id) => {
   const designation = await Designation.findOne({

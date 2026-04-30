@@ -37,7 +37,16 @@ export const getAllUOM = async (body) => {
     },
   };
 };
+//**Get dropdown Data */
+export const getDropdownData = async () => {
+  const filter = { isDeleted: false };
+  const data = await UOM.find(filter)
+    .select("_id name") // 🔥 only required fields
+    .sort({ name: 1 })
+    .lean();
 
+  return data;
+};
 // ─── Get UOM By ID ─────────────────────────────────────────
 export const getUOMById = async (id) => {
   const uom = await UOM.findOne({

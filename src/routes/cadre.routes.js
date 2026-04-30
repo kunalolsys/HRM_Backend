@@ -4,6 +4,7 @@ import {
   createCadre,
   deleteCadre,
   getAllCadre,
+  getAllCadreForDrops,
   getCadreById,
   updateCadre,
 } from "../controllers/cadre.controller.js";
@@ -13,6 +14,7 @@ const router = Router();
 router.use(authenticate);
 
 router.post("/list", hasPermission("manage_cadres"), getAllCadre);
+router.get("/list-drop", hasPermission("manage_cadres"), getAllCadreForDrops);
 router.get("/:id", hasPermission("manage_cadres"), getCadreById);
 router.post("/", hasPermission("manage_cadres"), createCadre);
 router.put("/:id", hasPermission("manage_cadres"), updateCadre);

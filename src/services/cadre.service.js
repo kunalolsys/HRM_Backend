@@ -42,7 +42,16 @@ export const getAllCadre = async (body) => {
     },
   };
 };
+//**Get dropdown Data */
+export const getDropdownData = async () => {
+  const filter = { isDeleted: false };
+  const data = await Cadre.find(filter)
+    .select("_id cadreName") // 🔥 only required fields
+    .sort({ cadreName: 1 })
+    .lean();
 
+  return data;
+};
 // ─── Get Cadre By ID ─────────────────────────────────────────
 export const getCadreById = async (id) => {
   const cadre = await Cadre.findOne({

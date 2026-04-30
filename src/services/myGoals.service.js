@@ -2,6 +2,7 @@ import GlobalGoalLibrary from "../models/GoalLibrary.js";
 import MyGoal from "../models/MyGoals.js";
 import Timeline from "../models/Timeline.js";
 import UOM from "../models/UOM.js";
+import User from "../models/User.js";
 
 // ─────────────────────────────────────────────
 // 🔹 Helper: Validate Goal Setting Window

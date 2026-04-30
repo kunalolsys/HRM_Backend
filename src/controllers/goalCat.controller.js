@@ -15,7 +15,20 @@ export const getAllGoalCat = asyncHandler(async (req, res) => {
     });
   }
 });
-
+export const getAllGoalCatForDrops = asyncHandler(async (req, res) => {
+  try {
+    const data = await goalCatService.getDropdownData(req.body);
+    res.status(200).json({
+      success: true,
+      data,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+});
 export const getGoalCatById = asyncHandler(async (req, res) => {
   try {
     const data = await goalCatService.getGoalCategoryById(req.params.id);

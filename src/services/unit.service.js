@@ -41,7 +41,16 @@ export const getAllUnits = async (body) => {
     },
   };
 };
+//**Get dropdown Data */
+export const getDropdownData = async () => {
+  const filter = { isDeleted: false };
+  const data = await Unit.find(filter)
+    .select("_id unitName") // 🔥 only required fields
+    .sort({ unitName: 1 })
+    .lean();
 
+  return data;
+};
 // ─── Get Unit By ID ─────────────────────────────────────────
 export const getUnitById = async (id) => {
   const unit = await Unit.findOne({

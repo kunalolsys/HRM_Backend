@@ -1,6 +1,7 @@
 import { Server } from "socket.io";
 
 let io;
+const onlineUsers = new Map(); // userId → socketId
 
 export const initSocket = (server) => {
   io = new Server(server, {
@@ -12,36 +13,42 @@ export const initSocket = (server) => {
   });
 
   io.on("connection", (socket) => {
-    console.log("🔌 User connected:", socket.id);
+    console.log("🟢 Connected:", socket.id);
 
-    // ✅ Join personal room
-    socket.on("join", (userId) => {
-      socket.join(userId);
-      console.log(`👤 User ${userId} joined personal room`);
+    // 🔐 Register user
+    socket.on("register", (userId) => {
+      onlineUsers.set(userId.toString(), socket.id);
+      console.log("User registered:", userId);
     });
 
-    // ✅ Join TASK rooms
-    socket.on("join-tasks", (userId) => {
-      socket.join(`user_tasks_${userId}`);
-      console.log(`📋 User ${userId} joined tasks room`);
-    });
-
-    // ✅ Join conversation room
-    socket.on("join-conversation", (conversationId) => {
+    // 💬 Join conversation room
+    socket.on("join_conversation", (conversationId) => {
       socket.join(conversationId);
-      console.log(`💬 Joined conversation ${conversationId}`);
     });
 
+    // 🚪 Leave room
+    socket.on("leave_conversation", (conversationId) => {
+      socket.leave(conversationId);
+    });
+
+    // ❌ Disconnect
     socket.on("disconnect", () => {
-      console.log("❌ User disconnected:", socket.id);
+      console.log("🔴 Disconnected:", socket.id);
+
+      for (let [userId, sockId] of onlineUsers.entries()) {
+        if (sockId === socket.id) {
+          onlineUsers.delete(userId);
+          break;
+        }
+      }
     });
   });
 
   return io;
 };
 
-// ✅ Access io anywhere (controllers, services)
-export const getIO = () => {
-  if (!io) throw new Error("Socket.io not initialized!");
-  return io;
+export const getIO = () => io;
+
+export const getReceiverSocket = (userId) => {
+  return onlineUsers.get(userId.toString());
 };

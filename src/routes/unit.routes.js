@@ -5,6 +5,7 @@ import {
   deleteUnit,
   getUnit,
   getUnitById,
+  getUnitForDrops,
   updateUnit,
 } from "../controllers/unit.controller.js";
 
@@ -13,6 +14,7 @@ const router = Router();
 router.use(authenticate);
 
 router.post("/list", hasPermission("manage_units"), getUnit);
+router.get("/list-drop", hasPermission("manage_units"), getUnitForDrops);
 router.get("/:id", hasPermission("manage_units"), getUnitById);
 router.post("/", hasPermission("manage_units"), createUnit);
 router.put("/:id", hasPermission("manage_units"), updateUnit);

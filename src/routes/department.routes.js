@@ -6,6 +6,7 @@ import {
   getAllDep,
   getDepById,
   updateDep,
+  getAllDepForDrops,
 } from "../controllers/department.controller.js";
 
 const router = Router();
@@ -13,6 +14,7 @@ const router = Router();
 router.use(authenticate);
 
 router.post("/list", hasPermission("manage_departments"), getAllDep);
+router.get("/list-drop", hasPermission("manage_departments"), getAllDepForDrops);
 router.get("/:id", hasPermission("manage_departments"), getDepById);
 router.post("/", hasPermission("manage_departments"), createDep);
 router.put("/:id", hasPermission("manage_departments"), updateDep);

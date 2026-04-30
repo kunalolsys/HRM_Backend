@@ -4,6 +4,7 @@ import {
   createGrade,
   deleteGrade,
   getAllGrade,
+  getAllGradeForDrops,
   getGradeById,
   updateGrade,
 } from "../controllers/grade.controller.js";
@@ -13,6 +14,7 @@ const router = Router();
 router.use(authenticate);
 
 router.post("/list", hasPermission("manage_grades"), getAllGrade);
+router.get("/list-drop", hasPermission("manage_grades"), getAllGradeForDrops);
 router.get("/:id", hasPermission("manage_grades"), getGradeById);
 router.post("/", hasPermission("manage_grades"), createGrade);
 router.put("/:id", hasPermission("manage_grades"), updateGrade);

@@ -4,6 +4,7 @@ import {
   createKRA,
   deleteKRA,
   getAllKRA,
+  getAllKRAForDrops,
   getKRAById,
   updateKRA,
 } from "../controllers/kra.controller.js";
@@ -13,6 +14,7 @@ const router = Router();
 router.use(authenticate);
 
 router.post("/list", hasPermission("manage_kra"), getAllKRA);
+router.get("/list-drop", hasPermission("manage_kra"), getAllKRAForDrops);
 router.get("/:id", hasPermission("manage_kra"), getKRAById);
 router.post("/", hasPermission("manage_kra"), createKRA);
 router.put("/:id", hasPermission("manage_kra"), updateKRA);

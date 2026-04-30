@@ -16,7 +16,21 @@ export const getUnit = asyncHandler(async (req, res) => {
     });
   }
 });
-
+export const getUnitForDrops = asyncHandler(async (req, res) => {
+  try {
+    const data = await unitService.getDropdownData(req.body);
+    res.status(200).json({
+      success: true,
+      count: data.length,
+      data: data,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+});
 export const getUnitById = asyncHandler(async (req, res) => {
   try {
     const data = await unitService.getUnitById(req.params.id);

@@ -37,7 +37,16 @@ export const getAllGoalCategory = async (body) => {
     },
   };
 };
+//**Get dropdown Data */
+export const getDropdownData = async () => {
+  const filter = { isDeleted: false };
+  const data = await GoalCategory.find(filter)
+    .select("_id name") // 🔥 only required fields
+    .sort({ name: 1 })
+    .lean();
 
+  return data;
+};
 // ─── Get Goal category By ID ─────────────────────────────────────────
 export const getGoalCategoryById = async (id) => {
   const category = await GoalCategory.findOne({

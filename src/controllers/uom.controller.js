@@ -15,7 +15,20 @@ export const getAllUOM = asyncHandler(async (req, res) => {
     });
   }
 });
-
+export const getAllUOMForDrops = asyncHandler(async (req, res) => {
+  try {
+    const data = await uomService.getDropdownData(req.body);
+    res.status(200).json({
+      success: true,
+      data,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+});
 export const getUOMById = asyncHandler(async (req, res) => {
   try {
     const data = await uomService.getUOMById(req.params.id);

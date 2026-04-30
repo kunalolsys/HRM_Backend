@@ -15,7 +15,20 @@ export const getAllComp = asyncHandler(async (req, res) => {
     });
   }
 });
-
+export const getAllCompForDrops = asyncHandler(async (req, res) => {
+  try {
+    const data = await companyService.getDropdownData(req.body);
+    res.status(200).json({
+      success: true,
+      data,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+});
 export const getCompById = asyncHandler(async (req, res) => {
   try {
     const data = await companyService.getCompanyById(req.params.id);

@@ -37,7 +37,16 @@ export const getAllKRA = async (body) => {
     },
   };
 };
+//**Get dropdown Data */
+export const getDropdownData = async () => {
+  const filter = { isDeleted: false };
+  const data = await KRA.find(filter)
+    .select("_id name") // 🔥 only required fields
+    .sort({ name: 1 })
+    .lean();
 
+  return data;
+};
 // ─── Get KRA By ID ─────────────────────────────────────────
 export const getKRAById = async (id) => {
   const kra = await KRA.findOne({

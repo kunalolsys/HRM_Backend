@@ -15,6 +15,20 @@ export const getAllDep = asyncHandler(async (req, res) => {
     });
   }
 });
+export const getAllDepForDrops = asyncHandler(async (req, res) => {
+  try {
+    const data = await departmentService.getDropdownData(req.body);
+    res.status(200).json({
+      success: true,
+      data,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+});
 
 export const getDepById = asyncHandler(async (req, res) => {
   try {

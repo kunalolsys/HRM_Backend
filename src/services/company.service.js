@@ -37,7 +37,16 @@ export const getAllCompany = async (body) => {
     },
   };
 };
+//**Get dropdown Data */
+export const getDropdownData = async () => {
+  const filter = { isDeleted: false };
+  const data = await Company.find(filter)
+    .select("_id entityName") // 🔥 only required fields
+    .sort({ entityName: 1 })
+    .lean();
 
+  return data;
+};
 // ─── Get Company By ID ─────────────────────────────────────────
 export const getCompanyById = async (id) => {
   const company = await Company.findOne({

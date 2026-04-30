@@ -69,6 +69,10 @@ const goalItemSchema = new mongoose.Schema(
     },
 
     comments: [commentSchema],
+    conversation: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Conversation",
+    },
   },
   { _id: true },
 );
@@ -101,7 +105,7 @@ const myGoalSchema = new mongoose.Schema(
 
     status: {
       type: String,
-      enum: ["DRAFT", "SUBMITTED", "APPROVED"],
+      enum: ["DRAFT", "SUBMITTED", "APPROVED", "UNDER_EDIT"],
       default: "DRAFT",
     },
 

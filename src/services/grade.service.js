@@ -43,7 +43,16 @@ export const getAllGrade = async (body) => {
     },
   };
 };
+//**Get dropdown Data */
+export const getDropdownData = async () => {
+  const filter = { isDeleted: false };
+  const data = await Grade.find(filter)
+    .select("_id gradeCode") // 🔥 only required fields
+    .sort({ gradeCode: 1 })
+    .lean();
 
+  return data;
+};
 // ─── Get Grade By ID ─────────────────────────────────────────
 export const getGradeById = async (id) => {
   const grade = await Grade.findOne({
