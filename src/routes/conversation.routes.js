@@ -1,5 +1,5 @@
 import express from "express";
-import * as myGoalController from "../controllers/myGoals.controller.js";
+import * as conversationController from "../controllers/conversation.controller.js";
 import { authenticate, hasPermission } from "../middlewares/auth.js";
 
 const router = express.Router();
@@ -8,76 +8,57 @@ const router = express.Router();
 router.use(authenticate);
 
 // ─────────────────────────────────────────────
-// 🔹 Initialize My Goals (create once per year)
+// 🔹 Get or Create Conversation for Goal Item
 // ─────────────────────────────────────────────
-router.post(
-  "/init",
+router.get(
+  "/goal",
   hasPermission("manage_own_goals"),
-  myGoalController.initMyGoals,
+  conversationController.getGoalConversation,
 );
 
 // ─────────────────────────────────────────────
-// 🔹 Import from Global Goal Library
+// 🔹 Ensure All Goal Items Have Conversations
 // ─────────────────────────────────────────────
-router.post(
-  "/import",
+router.get(
+  "/ensure-all",
   hasPermission("manage_own_goals"),
-  myGoalController.importFromLibrary,
+  conversationController.ensureAllConversations,
 );
 
 // ─────────────────────────────────────────────
-// 🔹 Cascade Manager Goals
+// 🔹 Send Message in Goal Conversation
 // ─────────────────────────────────────────────
 router.post(
-  "/cascade",
+  "/message",
   hasPermission("manage_own_goals"),
-  myGoalController.cascadeManagerGoals,
+  conversationController.sendGoalMessage,
 );
 
 // ─────────────────────────────────────────────
-// 🔹 Get My Goals
+// 🔹 Get Messages in Conversation
 // ─────────────────────────────────────────────
-router.get("/", hasPermission("manage_own_goals"), myGoalController.getMyGoals);
-
-// ─────────────────────────────────────────────
-// 🔹 Get My Manager Goals
-// ─────────────────────────────────────────────
-router.post("/my-manager-goals", hasPermission("manage_own_goals"), myGoalController.getMyManagerGoals);
-
-// ─────────────────────────────────────────────
-// 🔹 Submit Goals (FINAL LOCK)
-// ─────────────────────────────────────────────
-router.post(
-  "/submit",
+router.get(
+  "/:conversationId/messages",
   hasPermission("manage_own_goals"),
-  myGoalController.submitGoals,
+  conversationController.getGoalMessages,
 );
 
 // ─────────────────────────────────────────────
-// 🔹 Update Goal (target, weightage, uom)
+// 🔹 Get Notifications
+// ─────────────────────────────────────────────
+router.get(
+  "/notifications",
+  hasPermission("manage_own_goals"),
+  conversationController.getNotifications,
+);
+
+// ─────────────────────────────────────────────
+// 🔹 Mark Notification as Read
 // ─────────────────────────────────────────────
 router.put(
-  "/:goalId",
+  "/notifications/:notificationId/read",
   hasPermission("manage_own_goals"),
-  myGoalController.updateGoal,
-);
-
-// ─────────────────────────────────────────────
-// 🔹 Delete Goal
-// ─────────────────────────────────────────────
-router.delete(
-  "/:goalId",
-  hasPermission("manage_own_goals"),
-  myGoalController.deleteGoal,
-);
-
-// ─────────────────────────────────────────────
-// 🔹 Add Comment
-// ─────────────────────────────────────────────
-router.post(
-  "/:goalId/comment",
-  hasPermission("manage_own_goals"),
-  myGoalController.addComment,
+  conversationController.markNotificationRead,
 );
 
 export default router;

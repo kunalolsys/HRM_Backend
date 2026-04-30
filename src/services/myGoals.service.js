@@ -253,3 +253,18 @@ export const getMyGoals = async (userId, financialYear) => {
 
   return data;
 };
+// ─────────────────────────────────────────────
+// 🔹 Get My Manager Goals
+// ─────────────────────────────────────────────
+export const getMyManagerGoals = async (managerId, financialYear) => {
+  const data = await MyGoal.findOne({
+    user: managerId,
+    financialYear,
+  })
+    .populate("goals.kra goals.category goals.uom")
+    .lean();
+
+  if (!data) throw new Error("No goals found");
+
+  return data;
+};

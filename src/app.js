@@ -19,6 +19,7 @@ import trainingRoutes from "./routes/training.routes.js";
 import competencyBankRoutes from "./routes/competencyBank.routes.js";
 import myGoalsRoutes from "./routes/myGoals.routes.js";
 import teamGoalsRoutes from "./routes/teamGoals.routes.js";
+import conversationRoutes from "./routes/conversation.routes.js";
 
 const app = express();
 
@@ -95,6 +96,9 @@ app.use("/api/my-goals", myGoalsRoutes);
 //**Manage Teams Goals */
 app.use("/api/manage-goals", teamGoalsRoutes);
 
+//**Goal Conversations & Notifications */
+app.use("/api/conversation", conversationRoutes);
+
 // --- GLOBAL ERROR HANDLER ---
 app.use((err, req, res, next) => {
   console.error("ERROR:", err.message);
@@ -106,3 +110,14 @@ app.use((err, req, res, next) => {
 });
 
 export default app;
+
+// // Connect and register client side routing 
+// socket.emit("register", userId);
+
+// // Join conversation room
+// socket.emit("join_conversation", conversationId);
+
+// // Listen for events
+// socket.on("new_message", (message) => {});
+// socket.on("notification", (notification) => {});
+// socket.on("typing", ({ senderName, conversationId }) => {});

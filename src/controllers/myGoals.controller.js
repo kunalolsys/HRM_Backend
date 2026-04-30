@@ -213,3 +213,27 @@ export const getMyGoals = asyncHandler(async (req, res) => {
     });
   }
 });
+// ─────────────────────────────────────────────
+// 🔹 Get My Manager Goals
+// ─────────────────────────────────────────────
+export const getMyManagerGoals = asyncHandler(async (req, res) => {
+  try {
+    const { managerId } = req.body;
+    const { financialYear } = req.query;
+
+    const data = await myGoalService.getMyManagerGoals(
+      managerId,
+      financialYear,
+    );
+
+    res.status(200).json({
+      success: true,
+      data,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+});
