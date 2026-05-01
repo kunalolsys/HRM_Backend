@@ -84,6 +84,13 @@ export const loginUser = async (email, password) => {
 
   const userWithoutPassword = await User.findById(user._id)
     .populate("roles", "name description")
+    .populate("cadre", "cadreName")
+    .populate("grade", "gradeCode")
+    .populate("company", "entityName")
+    .populate("department", "departmentName")
+    .populate("designation", "name")
+    .populate("unit", "unitName locationCode")
+    .populate("reportingManager", "fullName email")
     .select("-password -refreshToken");
 
   return {

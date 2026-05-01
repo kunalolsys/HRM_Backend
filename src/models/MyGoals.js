@@ -108,7 +108,10 @@ const myGoalSchema = new mongoose.Schema(
       enum: ["DRAFT", "SUBMITTED", "APPROVED", "UNDER_EDIT"],
       default: "DRAFT",
     },
-
+    revisionCount: {
+      type: Number,
+      default: 0,
+    },
     submittedAt: Date,
     approvedAt: Date,
   },

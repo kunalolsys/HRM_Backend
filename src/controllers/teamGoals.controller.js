@@ -50,24 +50,35 @@ export const managerAddRemark = asyncHandler(async (req, res) => {
 // ─────────────────────────────────────────────
 // 🔹 Send Back for Correction
 // ─────────────────────────────────────────────
-export const sendBackForEdit = asyncHandler(async (req, res) => {
+// export const sendBackForEdit = asyncHandler(async (req, res) => {
+//   try {
+//     const managerId = req.user._id;
+//     const { myGoalId } = req.body;
+//     const data = await teamGoalService.sendBackForEdit(managerId, myGoalId);
+
+//     res.status(200).json({
+//       success: true,
+//       data,
+//     });
+//   } catch (err) {
+//     res.status(500).json({
+//       success: false,
+//       message: err.message,
+//     });
+//   }
+// });
+export const reviewGoals = async (req, res) => {
   try {
     const managerId = req.user._id;
-    const { myGoalId } = req.body;
-    const data = await teamGoalService.sendBackForEdit(managerId, myGoalId);
+    const { myGoalId, action, remarks } = req.body;
 
-    res.status(200).json({
-      success: true,
-      data,
-    });
+    const data = await teamGoalService.reviewMyGoal(managerId, myGoalId, action, remarks);
+
+    res.json({ success: true, data });
   } catch (err) {
-    res.status(500).json({
-      success: false,
-      message: err.message,
-    });
+    res.status(400).json({ success: false, message: err.message });
   }
-});
-
+};
 // ─────────────────────────────────────────────
 // 🔹 Approve Goals
 // ─────────────────────────────────────────────

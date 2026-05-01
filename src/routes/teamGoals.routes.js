@@ -16,10 +16,15 @@ router.post(
   hasPermission("approve_team_goals"),
   teamGoalsController.managerAddRemark,
 );
+// router.post(
+//   "/under-edit",
+//   hasPermission("approve_team_goals"),
+//   teamGoalsController.sendBackForEdit,
+// );
 router.post(
   "/under-edit",
   hasPermission("approve_team_goals"),
-  teamGoalsController.sendBackForEdit,
+  teamGoalsController.reviewGoals,
 );
 router.post(
   "/approved",
