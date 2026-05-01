@@ -84,6 +84,13 @@ export const importFromLibrary = async (
           target: "",
           weightage: 0,
           goalType,
+          quarter: "YEARLY", // Default to yearly goals
+          isCopiedForQuarter: false,
+          copiedFromGoalId: null,
+          adminModified: false,
+          modifiedInQuarter: null,
+          modifiedAt: null,
+          modifiedBy: null,
         });
       }
     }
@@ -133,6 +140,13 @@ export const cascadeManagerGoals = async (
     target: "",
     weightage: 0,
     goalType: g.goalType,
+    quarter: "YEARLY", // Default to yearly for cascade
+    isCopiedForQuarter: false,
+    copiedFromGoalId: null,
+    adminModified: false,
+    modifiedInQuarter: null,
+    modifiedAt: null,
+    modifiedBy: null,
   }));
 
   myGoal.goals.push(...cascaded);
@@ -267,4 +281,238 @@ export const getMyManagerGoals = async (managerId, financialYear) => {
   if (!data) throw new Error("No goals found");
 
   return data;
+};
+
+// ─────────────────────────────────────────────
+// 🔹 Propagate Goals to Quarter (Q1, Q2, Q3, Q4)
+// ─────────────────────────────────────────────
+export const propagateGoalsToQuarter = async (
+  userId,
+  financialYear,
+  targetQuarter,
+) => {
+  // Get the yearly goals
+  const myGoal = await MyGoal.findOne({ user: userId, financialYear });
+
+  if (!myGoal) throw new Error("MyGoals not found");
+
+  // Get the source quarter (previous quarter goals to copy from)
+  const previousQuarter =
+    targetQuarter === "Q1"
+      ? "YEARLY"
+      : targetQuarter === "Q2"
+        ? "Q1"
+        : targetQuarter === "Q3"
+          ? "Q2"
+          : targetQuarter === "Q4"
+            ? "Q3"
+            : "YEARLY";
+
+  // Get existing goals for this quarter to check if already copied
+  const existingQuarterGoals = myGoal.goals.filter(
+    (g) => g.quarter === targetQuarter,
+  );
+
+  // If already copied, return existing goals
+  if (existingQuarterGoals.length > 0) {
+    return myGoal;
+  }
+
+  // Get source goals (previous quarter or yearly)
+  const sourceGoals = myGoal.goals.filter(
+    (g) => g.quarter === previousQuarter && g.isCopiedForQuarter,
+  );
+
+  // If no previous quarter goals exist, get yearly goals
+  const goalsToCopy =
+    sourceGoals.length > 0
+      ? sourceGoals
+      : myGoal.goals.filter((g) => g.quarter === "YEARLY");
+
+  // Create soft copies for the target quarter
+  const newQuarterGoals = goalsToCopy.map((goal) => ({
+    source: goal.source,
+    libraryRef: goal.libraryRef,
+    kra: goal.kra,
+    kpi: goal.kpi,
+    category: goal.category,
+    uom: goal.uom,
+    target: goal.target, // Carry forward the target
+    weightage: goal.weightage,
+    goalType: goal.goalType,
+    quarter: targetQuarter,
+    isCopiedForQuarter: true,
+    copiedFromGoalId: goal._id, // Reference to original goal
+    adminModified: false,
+    modifiedInQuarter: null,
+    modifiedAt: null,
+    modifiedBy: null,
+  }));
+
+  myGoal.goals.push(...newQuarterGoals);
+  await myGoal.save();
+
+  return myGoal;
+};
+
+// ─────────────────────────────────────────────
+// 🔹 Get Goals for Specific Quarter
+// ─────────────────────────────────────────────
+export const getQuarterlyGoals = async (userId, financialYear, quarter) => {
+  const myGoal = await MyGoal.findOne({ user: userId, financialYear });
+
+  if (!myGoal) throw new Error("MyGoals not found");
+
+  const quarterGoals = myGoal.goals.filter((g) => g.quarter === quarter);
+
+  return quarterGoals;
+};
+
+// ─────────────────────────────────────────────
+// 🔹 Check Admin Modifications for Quarter
+// ─────────────────────────────────────────────
+export const checkAdminModifications = async (
+  userId,
+  financialYear,
+  quarter,
+) => {
+  const myGoal = await MyGoal.findOne({ user: userId, financialYear });
+
+  if (!myGoal) throw new Error("MyGoals not found");
+
+  const quarterGoals = myGoal.goals.filter(
+    (g) => g.quarter === quarter && g.adminModified,
+  );
+
+  return {
+    hasModifications: quarterGoals.length > 0,
+    modifiedGoals: quarterGoals,
+    modifiedCount: quarterGoals.length,
+  };
+};
+
+// ─────────────────────────────────────────────
+// 🔹 Admin Update Goal for Specific Quarter
+// ─────────────────────────────────────────────
+export const adminUpdateGoalForQuarter = async (
+  goalId,
+  adminId,
+  updateData,
+) => {
+  // Find the goal across all MyGoal documents
+  const myGoal = await MyGoal.findOne({ "goals._id": goalId });
+
+  if (!myGoal) throw new Error("Goal not found");
+
+  const goal = myGoal.goals.id(goalId);
+  if (!goal) throw new Error("Goal not found in document");
+
+  // Update allowed fields
+  if (updateData.target !== undefined) goal.target = updateData.target;
+  if (updateData.weightage !== undefined) goal.weightage = updateData.weightage;
+  if (updateData.uom) {
+    const uom = await UOM.findById(updateData.uom);
+    if (!uom) throw new Error("Invalid UOM");
+    goal.uom = uom._id;
+  }
+
+  // Mark as admin modified
+  goal.adminModified = true;
+  goal.modifiedInQuarter = goal.quarter;
+  goal.modifiedAt = new Date();
+  goal.modifiedBy = adminId;
+
+  await myGoal.save();
+
+  return myGoal;
+};
+
+// ─────────────────────────────────────────────
+// 🔹 Bulk Propagate All Users' Goals to Quarter (For Cron)
+// ─────────────────────────────────────────────
+export const bulkPropagateGoalsToQuarter = async (
+  financialYear,
+  targetQuarter,
+) => {
+  // Get all users who have goals for this financial year
+  const allMyGoals = await MyGoal.find({ financialYear }).lean();
+
+  const results = [];
+
+  for (const myGoal of allMyGoals) {
+    try {
+      const previousQuarter =
+        targetQuarter === "Q1"
+          ? "YEARLY"
+          : targetQuarter === "Q2"
+            ? "Q1"
+            : targetQuarter === "Q3"
+              ? "Q2"
+              : targetQuarter === "Q4"
+                ? "Q3"
+                : "YEARLY";
+
+      // Check if goals already exist for this quarter
+      const existingQuarterGoals = myGoal.goals.filter(
+        (g) => g.quarter === targetQuarter,
+      );
+
+      if (existingQuarterGoals.length > 0) {
+        results.push({
+          userId: myGoal.user,
+          status: "ALREADY_COPIED",
+        });
+        continue;
+      }
+
+      // Get source goals
+      const sourceGoals = myGoal.goals.filter(
+        (g) => g.quarter === previousQuarter && g.isCopiedForQuarter,
+      );
+
+      const goalsToCopy =
+        sourceGoals.length > 0
+          ? sourceGoals
+          : myGoal.goals.filter((g) => g.quarter === "YEARLY");
+
+      // Create soft copies
+      const newQuarterGoals = goalsToCopy.map((goal) => ({
+        source: goal.source,
+        libraryRef: goal.libraryRef,
+        kra: goal.kra,
+        kpi: goal.kpi,
+        category: goal.category,
+        uom: goal.uom,
+        target: goal.target,
+        weightage: goal.weightage,
+        goalType: goal.goalType,
+        quarter: targetQuarter,
+        isCopiedForQuarter: true,
+        copiedFromGoalId: goal._id,
+        adminModified: false,
+        modifiedInQuarter: null,
+        modifiedAt: null,
+        modifiedBy: null,
+      }));
+
+      await MyGoal.updateOne(
+        { _id: myGoal._id },
+        { $push: { goals: { $each: newQuarterGoals } } },
+      );
+
+      results.push({
+        userId: myGoal.user,
+        status: "COPIED",
+        count: newQuarterGoals.length,
+      });
+    } catch (error) {
+      results.push({
+        userId: myGoal.user,
+        status: "ERROR",
+        error: error.message,
+      });
+    }
+  }
+
+  return results;
 };

@@ -237,3 +237,109 @@ export const getMyManagerGoals = asyncHandler(async (req, res) => {
     });
   }
 });
+
+// ─────────────────────────────────────────────
+// 🔹 Propagate Goals to Quarter
+// ─────────────────────────────────────────────
+export const propagateGoalsToQuarter = asyncHandler(async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const { financialYear, quarter } = req.body;
+
+    const data = await myGoalService.propagateGoalsToQuarter(
+      userId,
+      financialYear,
+      quarter,
+    );
+
+    res.status(200).json({
+      success: true,
+      message: `Goals propagated to ${quarter}`,
+      data,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+});
+
+// ─────────────────────────────────────────────
+// 🔹 Get Quarterly Goals
+// ─────────────────────────────────────────────
+export const getQuarterlyGoals = asyncHandler(async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const { financialYear, quarter } = req.query;
+
+    const data = await myGoalService.getQuarterlyGoals(
+      userId,
+      financialYear,
+      quarter,
+    );
+
+    res.status(200).json({
+      success: true,
+      data,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+});
+
+// ─────────────────────────────────────────────
+// 🔹 Check Admin Modifications
+// ─────────────────────────────────────────────
+export const checkAdminModifications = asyncHandler(async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const { financialYear, quarter } = req.query;
+
+    const data = await myGoalService.checkAdminModifications(
+      userId,
+      financialYear,
+      quarter,
+    );
+
+    res.status(200).json({
+      success: true,
+      data,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+});
+
+// ─────────────────────────────────────────────
+// 🔹 Admin Update Goal for Specific Quarter
+// ─────────────────────────────────────────────
+export const adminUpdateGoalForQuarter = asyncHandler(async (req, res) => {
+  try {
+    const adminId = req.user._id;
+    const { goalId } = req.params;
+
+    const data = await myGoalService.adminUpdateGoalForQuarter(
+      goalId,
+      adminId,
+      req.body,
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Goal updated by admin",
+      data,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+});

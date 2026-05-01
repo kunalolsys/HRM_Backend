@@ -68,6 +68,47 @@ const goalItemSchema = new mongoose.Schema(
       required: true,
     },
 
+    // 📅 QUARTER TRACKING
+    quarter: {
+      type: String,
+      enum: ["YEARLY", "Q1", "Q2", "Q3", "Q4"],
+      default: "YEARLY",
+    },
+
+    isCopiedForQuarter: {
+      type: Boolean,
+      default: false,
+    },
+
+    // Reference to original goal when copied for quarter
+    copiedFromGoalId: {
+      type: mongoose.Schema.Types.ObjectId,
+      default: null,
+    },
+
+    // Admin modification tracking
+    adminModified: {
+      type: Boolean,
+      default: false,
+    },
+
+    modifiedInQuarter: {
+      type: String,
+      enum: ["Q1", "Q2", "Q3", "Q4", null],
+      default: null,
+    },
+
+    modifiedAt: {
+      type: Date,
+      default: null,
+    },
+
+    modifiedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      default: null,
+    },
+
     comments: [commentSchema],
     conversation: {
       type: mongoose.Schema.Types.ObjectId,

@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 import { initSocket } from "./socket/socket.js";
 import { getFinancialYear } from "./utils/helper.js";
 import { seedPmsCycles } from "./seeder/fyCycle.js";
-import { startPmsCron } from "./crons/FY_Cron.js";
+import { startPmsCron, startQuarterlyGoalCron } from "./crons/FY_Cron.js";
 
 dotenv.config();
 
@@ -43,8 +43,9 @@ mongoose
         const fy = getFinancialYear();
         await seedPmsCycles(fy);
 
-        // ✅ 2. Start cron
+// ✅ 2. Start cron
         startPmsCron();
+        startQuarterlyGoalCron();
       } catch (err) {
         console.error("Failed to start crons", err);
       }

@@ -45,6 +45,42 @@ router.get("/", hasPermission("manage_own_goals"), myGoalController.getMyGoals);
 router.post("/my-manager-goals", hasPermission("manage_own_goals"), myGoalController.getMyManagerGoals);
 
 // ─────────────────────────────────────────────
+// 🔹 Propagate Goals to Quarter
+// ─────────────────────────────────────────────
+router.post(
+  "/propagate",
+  hasPermission("manage_own_goals"),
+  myGoalController.propagateGoalsToQuarter,
+);
+
+// ─────────────────────────────────────────────
+// 🔹 Get Quarterly Goals
+// ─────────────────────────────────────────────
+router.get(
+  "/quarterly",
+  hasPermission("manage_own_goals"),
+  myGoalController.getQuarterlyGoals,
+);
+
+// ─────────────────────────────────────────────
+// 🔹 Check Admin Modifications
+// ─────────────────────────────────────────────
+router.get(
+  "/admin-modifications",
+  hasPermission("manage_own_goals"),
+  myGoalController.checkAdminModifications,
+);
+
+// ─────────────────────────────────────────────
+// 🔹 Admin Update Goal for Quarter
+// ─────────────────────────────────────────────
+router.put(
+  "/admin-update/:goalId",
+  hasPermission("manage_team_goals"),
+  myGoalController.adminUpdateGoalForQuarter,
+);
+
+// ─────────────────────────────────────────────
 // 🔹 Submit Goals (FINAL LOCK)
 // ─────────────────────────────────────────────
 router.post(

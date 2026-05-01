@@ -1,54 +1,26 @@
-# TODO: Socket Implementation for Goal Item Conversations
+# Quarterly Goal Propagation Implementation
 
-## Phase 1: Enhance Socket Service ✓
-- [x] Add socket import and getIO function
-- [x] Emit real-time events when messages are sent
-- [x] Emit notifications for goal status changes
+## Task: Implement quarterly goal soft-copy flow
 
-## Phase 2: Update myGoals Service - To be integrated when needed
-- [ ] Integrate socket when user adds comment
-- [ ] Emit notification when goals submitted
+### Steps to Complete:
 
-## Phase 3: Update teamGoals Service - To be integrated when needed
-- [ ] Integrate socket when manager adds remark
-- [ ] Emit notifications for approve/send back actions
+1. [x] **Update MyGoals Model** - Add quarter tracking fields to goalItemSchema
+   - Add quarter field (enum: YEARLY, Q1, Q2, Q3, Q4)
+   - Add isCopiedForQuarter field
+   - Add copiedFromGoalId field
+   - Add adminModified, modifiedInQuarter, modifiedAt, modifiedBy fields
 
-## Phase 4: Add API Routes ✓
-- [x] Add routes for goal conversations
-- [x] Create conversation when user accesses goal
+2. [x] **Create New Service Functions** (myGoals.service.js)
+   - propagateGoalsToQuarter(userId, financialYear, quarter) - Copy goals when quarter starts
+   - getQuarterlyGoals(userId, financialYear, quarter) - Get goals for specific quarter
+   - checkAdminModifications(userId, financialYear, quarter) - Check if admin made changes
 
-## Completed Features:
-- Real-time messaging between manager and goal user
-- Notification system for goal status changes (approved, sent back, submitted)
-- Conversation management per goal item
-- Message read tracking
+3. [x] **Create Admin Update Controller** (myGoals.controller.js)
+   - adminUpdateGoalForQuarter - Allow admin to modify goals for specific quarter
 
-## Socket Events (Client Side):
-```javascript
-// Connect and register
-socket.emit("register", userId);
+4. [x] **Add Admin Update Route** (myGoals.routes.js)
+   - POST /admin-update-goal/:goalId - Admin update endpoint
 
-// Join conversation room
-socket.emit("join_conversation", conversationId);
-
-// Listen for new messages
-socket.on("new_message", (message) => {
-  console.log("New message:", message);
-});
-
-// Listen for notifications
-socket.on("notification", (notification) => {
-  console.log("New notification:", notification);
-});
-
-// Send message via API
-// POST /api/conversation/message
-// Body: { conversationId, text }
-```
-
-## API Endpoints:
-- GET /api/conversation/goal?goalId=&myGoalId= - Get/create conversation
-- POST /api/conversation/message - Send message
-- GET /api/conversation/:conversationId/messages - Get messages
-- GET /api/conversation/notifications - Get notifications
-- PUT /api/conversation/notifications/:notificationId/read - Mark as read
+5. [x] **Create Cron Job** (FY_Cron.js or new quarterly cron)
+   - Trigger when quarter timeline starts
+   - Automatically propagate goals to quarters
