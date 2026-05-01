@@ -3,7 +3,7 @@ import cron from "node-cron";
 import Timeline from "../models/Timeline.js";
 import { seedPmsCycles } from "../seeder/fyCycle.js";
 import { getFinancialYear } from "../utils/helper.js";
-import { bulkPropagateGoalsToQuarter } from "../services/myGoals.service.js";
+import { bulkCreateQuarterlyGoals } from "../services/quarterlyGoals.service.js";
 
 export const startPmsCron = () => {
   cron.schedule("0 0 1 4 *", async () => {
@@ -30,8 +30,9 @@ export const startPmsCron = () => {
 
 // ─────────────────────────────────────────────
 // 🔹 Quarterly Goal Propagation Cron
-// ─────────────────────────────────────────────
+// ─────────────────────────────────────────��───
 // Runs every hour to check if any quarter has started
+// Only propagates APPROVED goals
 export const startQuarterlyGoalCron = () => {
   cron.schedule("0 * * * *", async () => {
     try {
@@ -49,19 +50,19 @@ export const startQuarterlyGoalCron = () => {
 
         console.log(`⏰ Propagating goals for ${financialYear} ${cycleName}...`);
 
-        // Bulk propagate goals for all users to this quarter
-        const results = await bulkPropagateGoalsToQuarter(
+        // Bulk propagate goals for APPROVED users only
+        const results = await bulkCreateQuarterlyGoals(
           financialYear,
           cycleName,
         );
 
-        const successCount = results.filter((r) => r.status === "COPIED").length;
+        const successCount = results.filter((r) => r.status === "CREATED").length;
         const alreadyCount = results.filter(
-          (r) => r.status === "ALREADY_COPIED",
+          (r) => r.status === "ALREADY_EXISTS",
         ).length;
 
         console.log(
-          `✅ ${cycleName} propagation complete: ${successCount} copied, ${alreadyCount} already exists`,
+          `✅ ${cycleName} propagation complete: ${successCount} created, ${alreadyCount} already exists`,
         );
       }
     } catch (err) {

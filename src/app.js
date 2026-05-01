@@ -19,6 +19,7 @@ import trainingRoutes from "./routes/training.routes.js";
 import competencyBankRoutes from "./routes/competencyBank.routes.js";
 import myGoalsRoutes from "./routes/myGoals.routes.js";
 import teamGoalsRoutes from "./routes/teamGoals.routes.js";
+import quarterlyGoalsRoutes from "./routes/quarterlyGoals.routes.js";
 import conversationRoutes from "./routes/conversation.routes.js";
 
 const app = express();
@@ -95,6 +96,9 @@ app.use("/api/my-goals", myGoalsRoutes);
 
 //**Manage Teams Goals */
 app.use("/api/manage-goals", teamGoalsRoutes);
+
+//**Quarterly Goals */
+app.use("/api/quarterly-goals", quarterlyGoalsRoutes);
 
 //**Goal Conversations & Notifications */
 app.use("/api/conversation", conversationRoutes);

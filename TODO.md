@@ -1,26 +1,23 @@
-# Quarterly Goal Propagation Implementation
+# Quarterly Goals Implementation TODO
 
-## Task: Implement quarterly goal soft-copy flow
+## Files to Create:
+1. [x] src/models/QuarterlyGoal.js - NEW MODEL
+2. [x] src/services/quarterlyGoals.service.js - NEW SERVICE
+3. [x] src/controllers/quarterlyGoals.controller.js - NEW CONTROLLER
+4. [x] src/routes/quarterlyGoals.routes.js - NEW ROUTES
 
-### Steps to Complete:
+## Files to Modify:
+5. [x] src/services/teamGoals.service.js - Call createQuarterlyGoals on approve
+6. [x] src/crons/FY_Cron.js - Check APPROVED status only
+7. [x] src/app.js or server.js - Add quarterlyGoals routes
 
-1. [x] **Update MyGoals Model** - Add quarter tracking fields to goalItemSchema
-   - Add quarter field (enum: YEARLY, Q1, Q2, Q3, Q4)
-   - Add isCopiedForQuarter field
-   - Add copiedFromGoalId field
-   - Add adminModified, modifiedInQuarter, modifiedAt, modifiedBy fields
+## Implementation Steps:
+- [x] Step 1: Create QuarterlyGoal model (separate collection)
+- [x] Step 2: Create quarterlyGoals service (CRUD operations)
+- [x] Step 3: Create quarterlyGoals controller (API handlers)
+- [x] Step 4: Create quarterlyGoals routes (endpoints)
+- [x] Step 5: Modify teamGoals.service to trigger quarterly creation
+- [x] Step 6: Modify FY_Cron to check APPROVED status
+- [x] Step 7: Register routes in app.js
 
-2. [x] **Create New Service Functions** (myGoals.service.js)
-   - propagateGoalsToQuarter(userId, financialYear, quarter) - Copy goals when quarter starts
-   - getQuarterlyGoals(userId, financialYear, quarter) - Get goals for specific quarter
-   - checkAdminModifications(userId, financialYear, quarter) - Check if admin made changes
-
-3. [x] **Create Admin Update Controller** (myGoals.controller.js)
-   - adminUpdateGoalForQuarter - Allow admin to modify goals for specific quarter
-
-4. [x] **Add Admin Update Route** (myGoals.routes.js)
-   - POST /admin-update-goal/:goalId - Admin update endpoint
-
-5. [x] **Create Cron Job** (FY_Cron.js or new quarterly cron)
-   - Trigger when quarter timeline starts
-   - Automatically propagate goals to quarters
+## ✅ COMPLETED - IMPLEMENTATION DONE

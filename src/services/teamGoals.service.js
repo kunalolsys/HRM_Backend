@@ -1,4 +1,5 @@
 import MyGoal from "../models/MyGoals.js";
+import { createQuarterlyGoals } from "./quarterlyGoals.service.js";
 
 export const getTeamGoals = async (userId, financialYear, body) => {
   const filter = {
@@ -87,7 +88,7 @@ export const reviewMyGoal = async (
     throw new Error("Only submitted goals can be reviewed");
   }
 
-  // ─────────────────────────────
+// ─────────────────────────────
   // ✅ CASE 1: APPROVE
   // ─────────────────────────────
   if (action === "APPROVE") {
@@ -96,6 +97,10 @@ export const reviewMyGoal = async (
     myGoal.approvedAt = new Date();
 
     await myGoal.save();
+
+    // ✅ Create quarterly goals for all quarters after approval
+    await createQuarterlyGoals(myGoal);
+
     return myGoal;
   }
 
@@ -131,7 +136,7 @@ export const reviewMyGoal = async (
 
   throw new Error("Invalid action");
 };
-//**Approve Goals (FINAL LOCK) */
+//**Approve Goals (FINAL LOCK) + Create Quarterly Goals */
 export const approveGoals = async (managerId, myGoalId) => {
   const doc = await MyGoal.findOne({
     _id: myGoalId,
@@ -149,6 +154,9 @@ export const approveGoals = async (managerId, myGoalId) => {
   doc.approvedAt = new Date();
 
   await doc.save();
+
+  // ✅ Create quarterly goals for all quarters after approval
+  await createQuarterlyGoals(doc);
 
   return doc;
 };
