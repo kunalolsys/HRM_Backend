@@ -46,17 +46,30 @@ export const startQuarterlyGoalCron = () => {
       });
 
       for (const timeline of activeTimelines) {
-        const { cycleName, financialYear } = timeline;
-
-        console.log(`⏰ Propagating goals for ${financialYear} ${cycleName}...`);
-
-        // Bulk propagate goals for APPROVED users only
-        const results = await bulkCreateQuarterlyGoals(
-          financialYear,
+        const {
+          _id,
           cycleName,
+          financialYear,
+          assessmentStart,
+          assessmentEnd,
+        } = timeline;
+
+        console.log(
+          `⏰ Propagating goals for ${financialYear} ${cycleName}...`,
         );
 
-        const successCount = results.filter((r) => r.status === "CREATED").length;
+        // Bulk propagate goals for APPROVED users only
+        const results = await bulkCreateQuarterlyGoals({
+          financialYear,
+          cycleName,
+          timelineId: _id,
+          startDate: assessmentStart,
+          endDate: assessmentEnd,
+        });
+
+        const successCount = results.filter(
+          (r) => r.status === "CREATED",
+        ).length;
         const alreadyCount = results.filter(
           (r) => r.status === "ALREADY_EXISTS",
         ).length;

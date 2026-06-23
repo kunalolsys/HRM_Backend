@@ -128,7 +128,13 @@ const quarterlyGoalSchema = new mongoose.Schema(
       enum: ["DRAFT", "APPROVED"],
       default: "DRAFT",
     },
-
+    timelineId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Timeline",
+      required: true,
+    },
+    startDate: Date, // snapshot from timeline
+    endDate: Date,
     // When quarterly goals were created
     createdAt: {
       type: Date,
@@ -144,7 +150,7 @@ const quarterlyGoalSchema = new mongoose.Schema(
 // Unique index: user + year + quarter
 quarterlyGoalSchema.index(
   { user: 1, financialYear: 1, quarter: 1 },
-  { unique: true }
+  { unique: true },
 );
 
 const QuarterlyGoal = mongoose.model("QuarterlyGoal", quarterlyGoalSchema);

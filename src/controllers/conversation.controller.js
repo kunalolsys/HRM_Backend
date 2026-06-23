@@ -1,6 +1,7 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import * as socketService from "../services/socket.service.js";
-import * as conversationUtils from "../services/conversation.utils.js";
+import * as conversationUtils from "../utils/conversation.utils.js";
+import * as getOrCreateGoalConversation from "../utils/conversation.utils.js";
 import MyGoal from "../models/MyGoals.js";
 
 // ─────────────────────────────────────────────
